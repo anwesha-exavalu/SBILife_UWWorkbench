@@ -1,6 +1,5 @@
 .content {
   width: 100%;
-  padding: 20px;
  
 }
 .dashboard-card-container {
@@ -84,10 +83,10 @@
   padding: 8px 16px;
   background-color: #1890ff;  /* Blue background for header */
   color: white;  /* White text for header */
-  font-weight: 500;
+  font-weight: 300;
   text-align: left;
   min-width: 100px;
-  font-size: 13px;  /* Decreased font size for header */
+  font-size: 14px;  /* Decreased font size for header */
 }
 
 .custom-table-header .ant-table-tbody > tr > td {
@@ -96,26 +95,26 @@
   text-overflow: ellipsis;
   padding: 8px 16px;
   text-align: left;
-  font-size: 12px;  /* Decreased font size for data cells */
+  font-size: 13px;  /* Decreased font size for data cells */
 }
 
 /* Specific column width adjustments */
 .custom-table-header .ant-table-thead > tr > th:nth-child(1),  /* Submission ID */
 .custom-table-header .ant-table-tbody > tr > td:nth-child(1) {
-  min-width: 100px;
-  max-width: 120px;
+  min-width: 130px;
+  max-width: 150px;
 }
 
 .custom-table-header .ant-table-thead > tr > th:nth-child(2),  /* Name */
 .custom-table-header .ant-table-tbody > tr > td:nth-child(2) {
-  min-width: 200px;
-  max-width: 250px;
+  min-width: 100px;
+  max-width: 120px;
 }
 
 .custom-table-header .ant-table-thead > tr > th:nth-child(3),  /* LOB */
 .custom-table-header .ant-table-tbody > tr > td:nth-child(3) {
-  min-width: 150px;
-  max-width: 180px;
+  min-width: 100px;
+  max-width: 120px;
 }
 
 .custom-table-header .ant-table-thead > tr > th:nth-child(4),  /* Limit */
@@ -126,20 +125,20 @@
 
 .custom-table-header .ant-table-thead > tr > th:nth-child(5),  /* Status */
 .custom-table-header .ant-table-tbody > tr > td:nth-child(5) {
-  min-width: 160px;
-  max-width: 200px;
+  min-width: 150px;
+  max-width: 180px;
 }
 
 .custom-table-header .ant-table-thead > tr > th:nth-child(6),  /* Date Submitted */
 .custom-table-header .ant-table-tbody > tr > td:nth-child(6) {
-  min-width: 120px;
-  max-width: 140px;
+  min-width: 100px;
+  max-width: 120px;
 }
 
 .custom-table-header .ant-table-thead > tr > th:nth-child(7),  /* Broker */
 .custom-table-header .ant-table-tbody > tr > td:nth-child(7) {
-  min-width: 120px;
-  max-width: 150px;
+  min-width: 100px;
+  max-width: 120px;
 }
 
 .custom-table-header .ant-table-thead > tr > th:nth-child(8),  /* Claim Propensity */
@@ -164,6 +163,11 @@
   overflow-x: auto;
 }
 
+/* Add new style here */
+body .iTRXUw .ant-table-wrapper {
+  padding: 10px 10px 10px 10px;
+}
+
 /* Style for sort icons in header */
 .custom-table-header .ant-table-column-sorter {
   color: white;
@@ -172,4 +176,50 @@
 /* Style for filter icons in header */
 .custom-table-header .ant-table-filter-trigger {
   color: white;
+}
+.summary-boxes {
+  display: flex;
+  justify-content: space-between;  /* Spread evenly */
+  gap: 15px;
+  margin-bottom: 20px;
+  width: 100%;  /* Ensures it takes full width */
+}
+
+.summary-box {
+  flex: 1;  /* Makes all boxes take equal width */
+  background-color: #f5f5f5;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  min-width: 120px;  /* Prevents boxes from becoming too small */
+  box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.summary-box h4 {
+  margin: 0;
+  font-size: 14px;
+  color: #333;
+}
+
+.summary-box p {
+  font-size: 20px;
+  font-weight: bold;
+  color: #0073e6;
+}
+
+/* Responsive Fixes */
+@media (max-width: 768px) {
+  .summary-boxes {
+    flex-wrap: wrap;  /* Stack boxes on smaller screens */
+  }
+
+  .summary-box {
+    flex: 1 1 calc(50% - 15px);  /* Two per row on medium screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .summary-box {
+    flex: 1 1 100%;  /* One per row on small screens */
+  }
 }
