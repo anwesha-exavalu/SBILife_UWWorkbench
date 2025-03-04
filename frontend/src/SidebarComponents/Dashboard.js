@@ -54,103 +54,40 @@ const MyTableComponent = ({
 const data = {
   myteamscases: [
     {
-      id: "CP1001",
-      client: "Fleet Solutions",
-      lob: "Commercial Property",
-      status: "Clearance UW",
-      limit: "$500,000",
-      date: "20-08-2024",
-      broker: "Marsh ",
-      priority: "Medium",
+      id: "4563748",
+      client: "Savings",
+      lob: "3",
+      status: "Fresh Case",
+      limit: "High",
+      date: "NO",
+      broker: "Agency",
+      priority: "Individual",
     },
     {
-      id: "CP1002",
-      client: "Skyline Residences",
-      lob: "Commercial Property",
-      status: "Clearance UW",
-      limit: "$250,000",
-      date: "18-08-2024",
-      broker: "Marsh ",
-      priority: "Medium",
+      id: "2467909",
+      client: "Term",
+      lob: "12",
+      status: "Pending Requirement",
+      limit: "High",
+      date: "YES",
+      broker: "Alternate",
+      priority: "Individual",
     },
   ],
   myassignedcases: [
     {
-      id: "CP1003",
-      client: "Skyline Property Inc.",
-      lob: "Commercial Property",
-      status: "Awaiting Client Response",
-      limit: "$900,000",
-      date: "10-15-2024",
-      broker: "Marsh ",
-      priority: "Medium",
-    },
-    {
-      id: "CP1001",
-      client: "Fleet Solutions",
-      lob: "Commercial Property",
-      status: "Clearance UW",
-      limit: "$500,000",
-      date: "20-08-2024",
-      broker: "Marsh ",
-      priority: "Medium",
-    },
-    {
-      id: "CP1006",
-      client: "Uptown Commercial Spaces",
-      lob: "Commercial Property",
-      status: "Broker Review",
-      limit: "$450,000",
-      date: "17-08-2024",
-      broker: "Marsh ",
-      priority: "Medium",
-    },
-    // { id: 'CP1004', client: 'Kew Garden Property Inc.', lob: 'Commercial Property', status: 'New Submission', limit: '$15,000,000', date: '11-05-2024', broker: 'Marsh ', priority: 'High' },
-  ],
-  senttobroker: [
-    {
-      id: "CP1006",
-      client: "Uptown Commercial Spaces",
-      lob: "Commercial Property",
-      status: "Broker Review",
-      limit: "$450,000",
-      date: "17-08-2024",
-      broker: "Marsh ",
-      priority: "Medium",
-    },
-    {
-      id: "CP1007",
-      client: "Client F",
-      lob: "Commercial Property",
-      status: "Broker Review",
-      limit: "$100,000",
-      date: "09-08-2024",
-      broker: "Marsh ",
-      priority: "High",
+      id: "7862967",
+      client: "Ulip",
+      lob: "2",
+      status: "Fresh Case",
+      limit: "High",
+      date: "NO",
+      broker: "Direct",
+      priority: "Individual",
     },
   ],
-  close: [
-    {
-      id: "CP1009",
-      client: "Client F",
-      lob: "Commercial Property",
-      status: "Approved",
-      limit: "$700,000",
-      date: "10-08-2024",
-      broker: "Marsh ",
-      priority: "Low",
-    },
-    {
-      id: "CP1010",
-      client: "Client I",
-      lob: "Commercial Property",
-      status: "Rejected",
-      limit: "$300,000",
-      date: "11-08-2024",
-      broker: "Marsh ",
-      priority: "High",
-    },
-  ],
+  senttobroker: [],
+  close: [],
 };
 
 const Dashboard = () => {
@@ -161,6 +98,12 @@ const Dashboard = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
 
+  const workQueueData = [
+    { title: "Fresh Cases", value: 3 },
+    { title: "Requirement Received", value: 2 },
+    { title: "Medical Dec Received", value: 0 },
+    { title: "Pending Requirement", value: 1 },
+  ];
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -241,107 +184,9 @@ const Dashboard = () => {
         text
       ),
   });
-  const policiesChartRef = useRef(null);
-  const submissionsChartRef = useRef(null);
-  const donutChartRef = useRef(null);
-  const createDonutChart = () => {
-    const ctx = donutChartRef.current.getContext("2d");
-    donutChartRef.current.chartInstance = new Chart(ctx, {
-      type: "doughnut",
-      data: {
-        labels: ["General Liability", "Commercial Property"],
-        datasets: [
-          {
-            data: [3000000, 7000000], // Updated to millions
-            backgroundColor: ["#FF69B4", "#36a2eb"],
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: function (context) {
-                // Format the numbers with commas and 'M' suffix
-                const value = (context.raw / 1000000).toFixed(1) + "M";
-                return `${context.label}: $${value}`;
-              },
-            },
-          },
-        },
-      },
-    });
-  };
-
-  useEffect(() => {
-    createBarChart(
-      policiesChartRef,
-      "Policies Issued",
-      ["Commercial Property", "General Liability"],
-      [30, 25, 40, 35]
-    );
-    createBarChart(
-      submissionsChartRef,
-      "Submission in Progress",
-      ["Commercial Property", "General Liability"],
-      [15, 18, 22, 20]
-    );
-
-    return () => {
-      [policiesChartRef, submissionsChartRef, donutChartRef].forEach((ref) => {
-        if (ref.current) ref.current.chartInstance.destroy();
-      });
-    };
-  }, []);
-  useEffect(() => {
-    createDonutChart();
-    return () => {
-      if (donutChartRef.current?.chartInstance) {
-        donutChartRef.current.chartInstance.destroy();
-      }
-    };
-  }, []);
-
-  const createBarChart = (chartRef, title, labels, data) => {
-    const ctx = chartRef.current.getContext("2d");
-    chartRef.current.chartInstance = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels,
-        datasets: [
-          { label: title, data, backgroundColor: ["#36A2EB", "#ff69b4"] },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: { y: { beginAtZero: true } },
-      },
-    });
-  };
-
-  // const createDonutChart = () => {
-  //   const ctx = donutChartRef.current.getContext('2d');
-  //   donutChartRef.current.chartInstance = new Chart(ctx, {
-  //     type: 'doughnut',
-  //     data: {
-  //       labels: ['New Business', 'Renewal Premium'],
-  //       datasets: [{ data: [7000, 3000], backgroundColor: ['#FF6384', '#FFCE56'] }],
-  //     },
-  //     options: {
-  //       responsive: true,
-  //       maintainAspectRatio: false,
-  //       plugins: { legend: { display: false } },
-  //     },
-  //   });
-  // };
-
+  
   const handleRowClick = (record) => {
-    navigate("/accountdashboard", { state: { account: record } });
+    // navigate("/accountdashboard", { state: { account: record } });
   };
 
   const handleChange = (pagination, filters, sorter) => {
@@ -351,8 +196,8 @@ const Dashboard = () => {
 
   const columns = [
     {
-      title: "Submission Id",
-      dataIndex: "id",
+      title: "Proposal Number",
+      dataIndex: "id", // Updated to match your data
       key: "id",
       ...getColumnSearchProps("id"),
       filters: [
@@ -362,121 +207,49 @@ const Dashboard = () => {
             .map((item) => ({ text: item.id, value: item.id }))
         ),
       ],
-      filteredValue: filteredInfo.id || null,
+      filteredValue: filteredInfo?.id || null,
       onFilter: (value, record) => record.id.includes(value),
     },
     {
-      title: "Name",
-      dataIndex: "client",
+      title: "Plan Type",
+      dataIndex: "client", // Updated
       key: "client",
       ...getColumnSearchProps("client"),
-      filters: [
-        ...new Set(
-          data.myteamscases
-            .concat(data.myassignedcases, data.senttobroker, data.close)
-            .map((item) => ({ text: item.client, value: item.client }))
-        ),
-      ],
-      filteredValue: filteredInfo.client || null,
-      onFilter: (value, record) => record.client.includes(value),
     },
     {
-      title: "LOB",
-      dataIndex: "lob",
+      title: "Ageing",
+      dataIndex: "lob", // Updated
       key: "lob",
       ...getColumnSearchProps("lob"),
-      filters: [
-        ...new Set(
-          data.myteamscases
-            .concat(data.myassignedcases, data.senttobroker, data.close)
-            .map((item) => ({ text: item.lob, value: item.lob }))
-        ),
-      ],
-      filteredValue: filteredInfo.lob || null,
-      onFilter: (value, record) => record.lob.includes(value),
     },
-    { title: "Limit", dataIndex: "limit", key: "limit" },
     {
-      title: "Status",
-      dataIndex: "status",
+      title: "Priority",
+      dataIndex: "limit", // Updated
+      key: "limit",
+    },
+    {
+      title: "Medical Case",
+      dataIndex: "status", // Updated
       key: "status",
       ...getColumnSearchProps("status"),
     },
     {
-      title: "Date Submitted",
-      dataIndex: "date",
+      title: "Proposal Status",
+      dataIndex: "date", // Updated
       key: "date",
-      sorter: (a, b) => new Date(a.date) - new Date(b.date),
-      sortOrder: sortedInfo.columnKey === "date" ? sortedInfo.order : null,
+      sorter: (a, b) => a.date.localeCompare(b.date),
     },
     {
-      title: "Broker",
-      dataIndex: "broker",
+      title: "Channel",
+      dataIndex: "broker", // Updated
       key: "broker",
       ...getColumnSearchProps("broker"),
     },
     {
-      title: "Claim Propensity",
-      dataIndex: "priority",
+      title: "Proposal Category",
+      dataIndex: "priority", // Updated
       key: "priority",
-      render: (priority, record) => (
-        <Popover
-          content={<PriorityPopup priority={priority} record={record} />}
-          trigger="click"
-          placement="rightTop"
-          overlayStyle={{ width: 500 }}
-        >
-          <span
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            style={{
-              padding: "4px 8px",
-              borderRadius: "4px",
-              backgroundColor:
-                priority === "High"
-                  ? "#fff1f0"
-                  : priority === "Medium"
-                  ? "#fffbe6"
-                  : "#f6ffed",
-              color:
-                priority === "High"
-                  ? "#cf1322"
-                  : priority === "Medium"
-                  ? "#d4b106"
-                  : "#389e0d",
-              cursor: "pointer",
-            }}
-          >
-            {priority}
-          </span>
-        </Popover>
-      ),
     },
-    // {
-    //   title: 'Action',
-    //   key: 'newSubmission',
-    //   render: (_, record) => (
-    //     <Button
-    //       type="primary"
-    //       onClick={(e) => {
-    //         e.stopPropagation();
-    //         console.log("Record data to be passed:", record); // Check if data is there
-    //         navigate('/createsubmission', { state: { record } });
-    //       }}
-    //     >
-    //       <div style={{ fontSize: '12px'}}>
-    //         Create Submission
-    //       </div>
-    //     </Button>
-    //   ),
-    // }
-  ];
-
-  const combinedData = [
-    ...data.myteamscases,
-    ...data.myassignedcases,
-    ...data.senttobroker,
   ];
 
   return (
@@ -484,91 +257,32 @@ const Dashboard = () => {
       <Tabs defaultActiveKey="1">
         <TabPane tab="My Dashboard" key="1">
           <div className="content">
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "flex-start",
-                gap: "5px",
-                flexWrap: "nowrap",
-              }}
-            >
-              <div
-                className="chart-container"
-                style={{ flex: 1, flexDirection: "column" }}
-              >
-                <div
-                  style={{
-                    textAlign: "center",
-                    fontSize: "16px",
-                    marginBottom: "5px",
-                  }}
-                >
-                  Policies Issued(YTD)
+            {/* Work Queue Summary Boxes */}
+            <div className="summary-boxes">
+              {workQueueData.map((item, index) => (
+                <div key={index} className="summary-box">
+                  <h4>{item.title}</h4>
+                  <p>{item.value}</p>
                 </div>
-                <canvas
-                  ref={policiesChartRef}
-                  style={{ maxHeight: "200px", width: "100%" }}
-                ></canvas>
-              </div>
-              <div
-                className="chart-container"
-                style={{ flex: 1, flexDirection: "column" }}
-              >
-                <div
-                  style={{
-                    textAlign: "center",
-                    fontSize: "16px",
-                    marginBottom: "5px",
-                  }}
-                >
-                  Submission in Progress(YTD)
-                </div>
-                <canvas
-                  ref={submissionsChartRef}
-                  style={{ maxHeight: "200px", width: "100%" }}
-                ></canvas>
-              </div>
-              <div
-                className="chart-container"
-                style={{ flex: 1, flexDirection: "column" }}
-              >
-                <div
-                  style={{
-                    textAlign: "center",
-                    fontSize: "16px",
-                    marginBottom: "5px",
-                  }}
-                >
-                  Premium by LOB(Quotes)
-                </div>
-                <canvas
-                  ref={donutChartRef}
-                  style={{ maxHeight: "200px", width: "100%" }}
-                ></canvas>
-              </div>
+              ))}
             </div>
+
             <Tabs defaultActiveKey="1">
-              <TabPane tab="My Work" key="1">
+              <TabPane tab="My Work Queue" key="1">
                 <MyTableComponent
                   columns={columns}
-                  dataSource={data.myassignedcases}
-                  handleRowClick={handleRowClick}
-                  handleChange={handleChange}
-                />
-              </TabPane>
-              <TabPane tab="My Team Work" key="2">
-                <MyTableComponent
-                  columns={columns}
-                  dataSource={combinedData}
+                  dataSource={[
+                    ...data.myteamscases,
+                    ...data.myassignedcases,
+                    ...data.senttobroker,
+                    ...data.close,
+                  ]}
                   handleRowClick={handleRowClick}
                   handleChange={handleChange}
                 />
               </TabPane>
             </Tabs>
           </div>
-        </TabPane>
-        <TabPane tab="My Portfolio" key="2">
-          <PortfolioInsights />
         </TabPane>
       </Tabs>
     </div>
