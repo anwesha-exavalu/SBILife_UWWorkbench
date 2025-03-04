@@ -1,31 +1,54 @@
-import React, { useState } from 'react';
-import { Button, Row, Col } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Button, Row, Col, Space, Drawer, Menu } from 'antd';
+import { 
+  FileTextOutlined, 
+
+  MedicineBoxOutlined, 
+  FileSearchOutlined, 
+  QuestionCircleOutlined, 
+  
+  MenuOutlined
+} from '@ant-design/icons';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import LossInfo from '../lob/commercialproperty/LossInfo';
+
 import UWQuestions from '../lob/commercialproperty/UWQuestions';
-import LocationComponent from '../lob/commercialproperty/LocationComponent';
+
 import CreateSubmission from '../SidebarComponents/CreateSubmission';
-import QuoteSummary from '../lob/commercialproperty/quoteSummary';
-import PremiumSummary from '../lob/commercialproperty/PremiumSummary';
-import Bind from '../lob/commercialproperty/Bind';
-import Coverages from '../lob/commercialproperty/Coverages';
+
 import Documents from './Documents';
+import ReportAnalysis from '../SidebarComponents/ReportAnalysis';
 
 const Sublob2 = (props) => {
   const sections = [
     'policyInfo',
-    'locationInfo',
-    'lossInfo',
-    'coverages',
-    'uw',
-    'premiumSummary',
-    'quoteSummary'
+    'medicalReport',
+    'reportAnalysis',
+    'uw'
   ];
- 
+  
   const [activeSection, setActiveSection] = useState(sections[0]);
+  const [isMobile, setIsMobile] = useState(false);
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  
+  // Check screen size on mount and when window resizes
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
 
   const showSublob = (sectionId) => {
     setActiveSection(sectionId);
+    if (isMobile) {
+      setDrawerVisible(false);
+    }
   };
 
   const goToNextSection = () => {
@@ -35,75 +58,118 @@ const Sublob2 = (props) => {
     }
   };
 
-  const containerStyle = {
-    display: 'flex',
-    overflowX: 'auto',
-    overflowY: 'hidden',
-    padding: '12px',
-    gap: '12px',
-    backgroundColor: '#fff',
-    minHeight: '60px',
-    marginBottom: '10px'
-  };
-
-  const buttonStyle = {
-    height: '36px',
-    minWidth: '140px',
-    flex: '0 0 auto',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '8px',
-    fontSize: '14px',
-    padding: '0 16px',
-    whiteSpace: 'nowrap',
-    backgroundColor: '#fff',
-    border: '1px solid #d9d9d9',
-    borderRadius: '6px',
-    transition: 'all 0.3s',
-    marginRight: '0'
-  };
-
-  const activeButtonStyle = {
-    ...buttonStyle,
-    backgroundColor: '#1890ff',
-    color: '#fff',
-    borderColor: '#1890ff'
-  };
-
   const buttonData = [
-    { key: 'policyInfo', icon: 'file-alt', text: 'Insured Info' },
-    { key: 'locationInfo', icon: 'map-marker-alt', text: 'Risk' },
-    { key: 'lossInfo', icon: 'exclamation-triangle', text: 'Loss' },
-    { key: 'coverages', icon: 'shield-alt', text: 'Coverages' },
-    { key: 'uw', icon: 'question-circle', text: 'UW Questions' },
-    { key: 'premiumSummary', icon: 'calculator', text: 'Premium Summary' },
-    { key: 'quoteSummary', icon: 'file-signature', text: 'Quote Summary' }
+    { key: 'policyInfo', icon: <FileTextOutlined />, text: 'Insured Info' },
+    { key: 'medicalReport', icon: <MedicineBoxOutlined />, text: 'Medical Report' },
+    { key: 'reportAnalysis', icon: <FileSearchOutlined />, text: 'Report Analysis' },
+    { key: 'uw', icon: <QuestionCircleOutlined />, text: 'UW Questions' },
   ];
+
+  // Desktop navigation with evenly spaced buttons
+  const DesktopNavigation = () => (
+    <Row className="nav-container" style={{
+      width: '100%',
+      padding: '12px 0',
+      marginBottom: '6px'
+    }}>
+      {buttonData.map((section, index) => (
+        <Col key={section.key} span={24 / buttonData.length}>
+          <Button
+            type={activeSection === section.key ? 'primary' : 'default'}
+            onClick={() => showSublob(section.key)}
+            icon={section.icon}
+            style={{
+              width: '90%',
+              height: '36px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '14px',
+              padding: '0 10px',
+              whiteSpace: 'nowrap',
+              borderRadius: '6px',
+              transition: 'all 0.3s',
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)"
+            }}
+          >
+            {section.text}
+          </Button>
+        </Col>
+      ))}
+    </Row>
+  );
+
+  // Mobile navigation drawer
+  const MobileNavigation = () => (
+    <>
+      <div style={{ 
+        padding: '12px 0',
+        display: 'flex', 
+        justifyContent: 'space-between',
+        alignItems: 'center',
+      }}>
+        <span style={{ fontWeight: 'bold', marginLeft: '12px' }}>
+          {buttonData.find(item => item.key === activeSection)?.text || 'Insurance Application'}
+        </span>
+        <Button 
+          icon={<MenuOutlined />} 
+          onClick={() => setDrawerVisible(true)}
+          type="primary"
+          style={{ marginRight: '12px' }}
+        />
+      </div>
+      
+      <Drawer
+        title="Sections"
+        placement="left"
+        onClose={() => setDrawerVisible(false)}
+        open={drawerVisible}
+        width={250}
+      >
+        <Menu
+          mode="vertical"
+          selectedKeys={[activeSection]}
+          style={{ border: 'none' }}
+        >
+          {buttonData.map(section => (
+            <Menu.Item 
+              key={section.key} 
+              icon={section.icon}
+              onClick={() => showSublob(section.key)}
+            >
+              {section.text}
+            </Menu.Item>
+          ))}
+        </Menu>
+      </Drawer>
+    </>
+  );
 
   return (
     <div className="flex flex-col w-full">
-      <div style={containerStyle}>
-        {buttonData.map(section => (
-          <Button
-            key={section.key}
-            onClick={() => showSublob(section.key)}
-            style={activeSection === section.key ? activeButtonStyle : buttonStyle}
-          >
-            <i className={`fas fa-${section.icon}`} />
-            <span className="ml-2">{section.text}</span>
-          </Button>
-        ))}
-      </div>
+      {isMobile ? <MobileNavigation /> : <DesktopNavigation />}
 
-      <div className="mt-4">
+      <div className="mt-4 px-4">
         {activeSection === 'policyInfo' && <CreateSubmission onNext={goToNextSection} />}
-        {activeSection === 'locationInfo' && <LocationComponent onNext={goToNextSection} />}
-        {activeSection === 'lossInfo' && <LossInfo onNext={goToNextSection} />}
-        {activeSection === 'coverages' && <Coverages onNext={goToNextSection} />}
+        {activeSection === 'medicalReport' && (
+          <div className="ant-card ant-card-bordered">
+            <div className="ant-card-body">
+              <h3>Medical Report</h3>
+              <p>Medical report content goes here.</p>
+              <Button type="primary" onClick={goToNextSection}>Next</Button>
+            </div>
+          </div>
+        )}
+        {activeSection === 'reportAnalysis' && (
+          <div className="ant-card ant-card-bordered">
+            <div className="ant-card-body">
+              <h3>Report Analysis</h3>
+              <ReportAnalysis/>
+              <Button type="primary" onClick={goToNextSection}>Next</Button>
+            </div>
+          </div>
+        )}
         {activeSection === 'uw' && <UWQuestions onNext={goToNextSection} />}
-        {activeSection === 'premiumSummary' && <PremiumSummary onNext={goToNextSection} />}
-        {activeSection === 'quoteSummary' && <QuoteSummary onNext={goToNextSection} />}
       </div>
 
       <Documents />
