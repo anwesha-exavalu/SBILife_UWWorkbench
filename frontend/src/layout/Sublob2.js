@@ -2,26 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { Button, Row, Col, Space, Drawer, Menu } from 'antd';
 import { 
   FileTextOutlined, 
-
   MedicineBoxOutlined, 
   FileSearchOutlined, 
   QuestionCircleOutlined, 
-  
   MenuOutlined
 } from '@ant-design/icons';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 
 import UWQuestions from '../lob/commercialproperty/UWQuestions';
-
 import CreateSubmission from '../SidebarComponents/CreateSubmission';
-
 import Documents from './Documents';
-import ReportAnalysis from '../SidebarComponents/ReportAnalysis';
+import ReportAnalysis from '../lob/commercialproperty/ReportAnalysis';
+import RequirementsTable from '../lob/commercialproperty/RequirementTable';
 
 const Sublob2 = (props) => {
   const sections = [
     'policyInfo',
-    'medicalReport',
+    'requirements',
     'reportAnalysis',
     'uw'
   ];
@@ -59,9 +56,9 @@ const Sublob2 = (props) => {
   };
 
   const buttonData = [
-    { key: 'policyInfo', icon: <FileTextOutlined />, text: 'Insured Info' },
-    { key: 'medicalReport', icon: <MedicineBoxOutlined />, text: 'Medical Report' },
-    { key: 'reportAnalysis', icon: <FileSearchOutlined />, text: 'Report Analysis' },
+    { key: 'policyInfo', icon: <FileTextOutlined />, text: 'Proposal Proposer Info' },
+    { key: 'requirements', icon: <MedicineBoxOutlined />, text: 'Requirement' },
+    { key: 'reportAnalysis', icon: <FileSearchOutlined />, text: 'Medical Analysis' },
     { key: 'uw', icon: <QuestionCircleOutlined />, text: 'UW Questions' },
   ];
 
@@ -151,24 +148,8 @@ const Sublob2 = (props) => {
 
       <div className="mt-4 px-4">
         {activeSection === 'policyInfo' && <CreateSubmission onNext={goToNextSection} />}
-        {activeSection === 'medicalReport' && (
-          <div className="ant-card ant-card-bordered">
-            <div className="ant-card-body">
-              <h3>Medical Report</h3>
-              <p>Medical report content goes here.</p>
-              <Button type="primary" onClick={goToNextSection}>Next</Button>
-            </div>
-          </div>
-        )}
-        {activeSection === 'reportAnalysis' && (
-          <div className="ant-card ant-card-bordered">
-            <div className="ant-card-body">
-              <h3>Report Analysis</h3>
-              <ReportAnalysis/>
-              <Button type="primary" onClick={goToNextSection}>Next</Button>
-            </div>
-          </div>
-        )}
+        {activeSection === 'requirements' && <RequirementsTable onNext={goToNextSection}/>}
+        {activeSection === 'reportAnalysis' && <ReportAnalysis onNext={goToNextSection}/>}
         {activeSection === 'uw' && <UWQuestions onNext={goToNextSection} />}
       </div>
 
