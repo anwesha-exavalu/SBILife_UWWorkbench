@@ -1,0 +1,94 @@
+.container {
+    padding: 20px;
+    background-color: #eff3fa;
+    min-height: 100vh;
+  }
+  
+  .mainTitle {
+    color: #1890ff;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .card {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .uploadButton{
+    background-color: #1890ff;
+    color: white;
+    width: auto;
+    
+    padding: 10px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+  
+  .uploadButton:hover {
+    background-color: #1291f8;
+    transform: scale(1.05);
+  }
+  
+  .analysisButton {
+    background-color:  #1890ff;
+    color: white;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    width: auto;
+  }
+  
+  .analysisButton:hover {
+    background-color: #1291f8;
+    transform: scale(1.05);
+  }
+  
+  .downloadButton {
+    background-color: #1890ff;
+    color: white;
+    border-radius: 8px;
+    padding: 10px 20px;
+    display: flex;
+    width: auto;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+  
+  .downloadButton:hover {
+    background-color: #1291f8;
+    transform: scale(1.05);
+  }
+  
+  .emptyPreview {
+    background: #f0f0f0;
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+  }
+  
+  .configuratorSection {
+    background-color: white;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .responsiveCol {
+    transition: all 0.3s ease;
+  }
+  
+  /* .responsiveCol:hover {
+    transform: translateY(-5px);
+  } */

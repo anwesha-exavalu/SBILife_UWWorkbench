@@ -17,6 +17,7 @@ import CreateSubmission from '../SidebarComponents/CreateSubmission';
 
 import Documents from './Documents';
 import ReportAnalysis from '../SidebarComponents/ReportAnalysis';
+import ECGAnalysis from './ReportAnalysisScreen';
 
 const Sublob2 = (props) => {
   const sections = [
@@ -163,9 +164,9 @@ const Sublob2 = (props) => {
         {activeSection === 'reportAnalysis' && (
           <div className="ant-card ant-card-bordered">
             <div className="ant-card-body">
-              <h3>Report Analysis</h3>
-              <ReportAnalysis/>
-              <Button type="primary" onClick={goToNextSection}>Next</Button>
+             
+              <ECGAnalysis/>
+              {/* <Button type="primary" onClick={goToNextSection}>Next</Button> */}
             </div>
           </div>
         )}
