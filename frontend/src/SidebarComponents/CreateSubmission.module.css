@@ -149,11 +149,17 @@
   }
   
   .widgetTitle {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
     margin-bottom: 15px;
+    color: #1050a8;
     border-bottom: 1px solid #e8e8e8;
     padding-bottom: 5px;
+  }
+  .PageTitle{
+    font-size: 22px;
+    
+    margin-left: 10px;
   }
   
   .widgetBox .ant-row .ant-col {

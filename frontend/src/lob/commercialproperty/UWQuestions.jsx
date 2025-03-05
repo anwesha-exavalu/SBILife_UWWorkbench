@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./UWQuestions.css";
-import { Col, Row, Button, Popover, Table } from "antd";
+import { Col, Row, Button, Popover, Table, Select } from "antd";
 import ModalDesign from "../../layout/Modal";
 import FormInput from "../../components/FormInput";
 import DropdownSelect from "../../components/FormDropdown";
@@ -18,7 +18,7 @@ const uwquestionsData = [
     ]
   },
   {
-    question: "Whether KYC/AML norms for proposer/witness/ premium payer are fulfilled (if required as per guidelines)",
+    question: "Whether KYC/AML norms for proposer/witness/ premium payer are fulfilled (if required) as per guidelines",
     response: "",
     comment: "",
     options: [
@@ -28,7 +28,7 @@ const uwquestionsData = [
     ]
   },
   {
-    question: "Whether document like address proof, id proof, proof of source of funding are verified for authenticity and attestation of proposer and authorized sales representative (if required as per the guidelines)",
+    question: "Whether  document like address proof, id proof, proof of source of funding are verified for authenticity and attestation of proposer and authirized sales representatiove (if required as per the guidelines)",
     response: "",
     comment: "",
     options: [
@@ -48,13 +48,23 @@ const uwquestionsData = [
     ]
   },
   {
-    question: "Whether occupation details with exact nature of duties and name of the employer has been given? Whether occupation questionnaire has been obtained if the occupation is hazardous as per UW manual",
+    question: "Whether occupation details with exact nature of duties and name of the employer has been given ? Whether occupation questionnaire has been obtained if the occupation is hazardous as per UW manual",
     response: "",
     comment: "",
     options: [
       { value: "yes", label: "Yes" },
       { value: "no", label: "No" },
       { value: "test", label: "Test" }
+    ]
+  },
+  {
+    question: "Annual income as per proposal form",
+    response: "",
+    comment: "",
+    options: [
+      // { value: "yes", label: "Yes" },
+      // { value: "no", label: "No" },
+      // { value: "test", label: "Test" }
     ]
   },
   {
@@ -102,9 +112,20 @@ const uwquestionsData = [
     response: "",
     comment: "",
     options: [
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" },
+      { value: "na", label: "Not Applicable" }
+    ]
+  },
+  {
+    question: "Confirm who has paid the premium",
+    response: "",
+    comment: "",
+    options: [
       { value: "proposer", label: "Proposer" },
       { value: "lifeAssured", label: "Life Assured" },
-      { value: "parentsSpouse", label: "Parents/Spouse" },
+      { value: "parent", label: "Parents" },
+      { value: "spouce", label: "Spouce" },
       { value: "company", label: "Company" }
     ]
   },
@@ -115,7 +136,18 @@ const uwquestionsData = [
     options: [
       { value: "self", label: "Self" },
       { value: "spouse", label: "Spouse" },
+
+    ]
+  },
+  {
+    question: "Income proof Submitted",
+    response: "",
+    comment: "",
+    options: [
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" },
       { value: "na", label: "Not Applicable" }
+
     ]
   },
   {
@@ -140,10 +172,10 @@ const UWQuestions = ({ onNext }) => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkScreenSize();
     window.addEventListener('resize', checkScreenSize);
-    
+
     return () => {
       window.removeEventListener('resize', checkScreenSize);
     };
@@ -207,42 +239,42 @@ const UWQuestions = ({ onNext }) => {
   return (
     <Row>
       <Col span={24}>
-        <div 
-          className="mainContainer" 
-          id="uw" 
-          style={{ 
-            width: '100%', 
+        <div
+          className="mainContainer"
+          id="uw"
+          style={{
+            width: '100%',
             overflowX: 'auto',
             padding: isMobile ? '10px' : '20px'
           }}
         >
           <div className="uw-questions-section">
             <h2>UW Questions</h2>
-            <Table 
+            <Table
               columns={columns}
               dataSource={questions}
               pagination={false}
               scroll={{ x: 800 }}
-              style={{ 
+              style={{
                 width: '100%',
                 overflowX: 'auto'
               }}
               components={{
                 header: {
                   cell: (props) => (
-                    <th 
-                      {...props} 
-                      style={{ 
-                        ...props.style, 
-                        backgroundColor: '#76a9e0', 
-                        color: 'white', 
+                    <th
+                      {...props}
+                      style={{
+                        ...props.style,
+                        backgroundColor: '#76a9e0',
+                        color: 'white',
                         fontWeight: 'bold',
                         fontFamily: 'Arial, sans-serif',
                         padding: '8px',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis'
-                      }} 
+                      }}
                     />
                   )
                 }
@@ -252,8 +284,8 @@ const UWQuestions = ({ onNext }) => {
 
           <div
             className="override-decision-container"
-            style={{ 
-              marginBottom: 20, 
+            style={{
+              marginBottom: 20,
               width: '100%',
               padding: isMobile ? '10px' : '20px'
             }}
@@ -274,6 +306,44 @@ const UWQuestions = ({ onNext }) => {
                 resize: "vertical",
               }}
             />
+
+            {/* New Box Below Notes */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                border: "1px solid black",
+                width: "100%",
+              }}
+            >
+              <div
+                style={{
+                  flex: 1,
+                  backgroundColor: "#d4ebf2",
+                  padding: "10px",
+                  fontWeight: "bold",
+                  fontSize:"14px",
+                  textAlign: "center",
+                  borderRight: "1px solid black",
+                }}
+              >
+                Override Decision
+              </div>
+              <div style={{ padding: "10px" }}>
+                <Select
+                  style={{ width: 120 }}
+                  options={[
+                    { label: "Accept", value: "accept" },
+                    { label: "Decline", value: "decline" },
+                    { label: "Postpone", value: "postpone" },
+                    { label: "Accept with Extra", value: "accept with extra" },
+                    { label: "Refer Case", value: "refercase" },
+                  ]}
+                  placeholder="Select"
+                />
+              </div>
+            </div>
+
             {/* <h5 style={{ marginTop: "20px" }}>Claim Propensity</h5> */}
             {/* <div
               style={{
@@ -317,9 +387,9 @@ const UWQuestions = ({ onNext }) => {
                 </Button>
               </Popover>
             </div> */}
-            <div className="decision-container">
+            {/* <div className="decision-container">
               <ModalDesign />
-            </div>
+            </div> */}
           </div>
           {/* <Row gutter={16}>
             <Col span={20}></Col>

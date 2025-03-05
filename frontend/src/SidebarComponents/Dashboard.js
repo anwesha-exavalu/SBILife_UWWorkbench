@@ -186,7 +186,7 @@ const Dashboard = () => {
   });
   
   const handleRowClick = (record) => {
-    // navigate("/accountdashboard", { state: { account: record } });
+    navigate("/createsubmission", { state: { account: record } });
   };
 
   const handleChange = (pagination, filters, sorter) => {

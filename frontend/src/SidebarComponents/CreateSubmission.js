@@ -87,12 +87,14 @@ function CreateSubmission({ onNext }) {
     pep: "No"
   });
   const [proposerInfo, setProposerInfo] = useState({
+    salutation: "Mr",
     clientId: "6578903",
     firstName: "Abhishek",
     middleName: "Kumar",
     lastName: "Singh",
     dob: "7/4/1997",
     gender: "Male",
+    ageProof: "Aadhaar Card",
     fatherName: "Aakash Kumar",
     address: "245 Gandhi Nagar, BARKATPURA, HYDERABAD -500027",
     education: "Graduate",
@@ -106,6 +108,7 @@ function CreateSubmission({ onNext }) {
   });
 
   const [nomineeDetails, setNomineeDetails] = useState({
+    salutation: "Mrs",
     clientId: "6595643",
     firstName: "Kajal",
     middleName: "NA",
@@ -121,7 +124,7 @@ function CreateSubmission({ onNext }) {
     frequency: "Annually",
     entryAge: "27",
     exitAge: "37",
-    premiumTerm: "10 Years",
+    premiumTerm: "5 Years",
     benefitTerm: "10 Years",
     premiumAmount: "104,500",
     extraPremium: "NA",
@@ -131,13 +134,14 @@ function CreateSubmission({ onNext }) {
   const [medicalHistory, setMedicalHistory] = useState({
     height: "165",
     weight: "64",
-    weightChange: "No",
+    weightChange: "NO",
     diabetesHistory: "NO",
     otherDiseases: "NO",
     hospitalisation: "NO",
     currentTreatment: "NO",
     dateOfDiagnosis: "NO"
   });
+
 
   const handleInputChange = (e, section, field) => {
     const value = e.target ? e.target.value : e;
@@ -354,60 +358,6 @@ function CreateSubmission({ onNext }) {
       setLoading(false);
     }
   };
-  // const handleUpload = async ({ file }) => {
-  //   console.log("Starting upload for file:", file.name);
-  //   try {
-  //     setLoading(true);
-  //     setError(null);
-
-  //     // Basic file validation
-  //     if (!file || file.type !== "application/pdf") {
-  //       throw new Error("Please upload a valid PDF file");
-  //     }
-
-  //     const formData = new FormData();
-  //     formData.append("file", file);
-
-  //     console.log("Sending request to:", `${PROD_URL}/api/process_doc`);
-
-  //     const response = await fetch(`${PROD_URL}/api/process_doc`, {
-  //       method: "POST",
-  //       body: formData,
-  //     });
-
-  //     if (!response.ok) {
-  //       const errorData = await response.json();
-  //       throw new Error(
-  //         errorData.message || `Upload failed with status: ${response.status}`
-  //       );
-  //     }
-
-  //     const responseData = await response.json();
-  //     console.log("Upload API Response:", responseData);
-
-  //     if (!responseData.application_details) {
-  //       throw new Error("Invalid response format from API");
-  //     }
-
-  //     // Update form states with response data
-  //     updateFormStates(responseData.application_details);
-
-  //     setFileList([file]);
-  //     message.success(`${file.name} processed successfully`);
-  //     setSuccess(true);
-  //   } catch (error) {
-  //     console.error("Upload Error:", error);
-  //     message.error(`Upload failed: ${error.message}`);
-  //     setError(error.message);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-  // Function to handle file upload
-  // const handleUploadFile = ({ file, fileList }) => {
-  //   setFileList(fileList);
-  //   message.success(`${file.name} uploaded successfully`);
-  // };
 
   const updateFormStates = (data) => {
     if (!data) return;
@@ -495,9 +445,16 @@ function CreateSubmission({ onNext }) {
                   >
                     Upload
                   </Button> */}
-                   <Button
+                  <Button
                     type="primary"
-                   
+
+                    style={{ width: "5.5rem" }}
+                  >
+                    IIB
+                  </Button>
+                  <Button
+                    type="primary"
+
                     style={{ width: "5.5rem" }}
                   >
                     Client Search
@@ -527,8 +484,9 @@ function CreateSubmission({ onNext }) {
                 </div>
               </Col>
             </Row>
-
+            <h4 className={styles.PageTitle}>Proposal Number: 2467909</h4>
             <Row gutter={16}>
+           
               {/* Proposal Info Section */}
               <Col span={24}>
                 <div className={styles.widgetBox}>
@@ -566,6 +524,30 @@ function CreateSubmission({ onNext }) {
                         value={proposalInfo.medicalCase}
                         readOnly={!isEditMode}
                         onChange={(e) => handleInputChange(e, "proposalInfo", "medicalCase")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Email Verified"
+                        value={proposalInfo.eMailVerified}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "proposalInfo", "eMailVerified")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="KYC"
+                        value={proposalInfo.kyc}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "proposalInfo", "kyc")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="PEP"
+                        value={proposalInfo.pep}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "proposalInfo", "pep")}
                       />
                     </Col>
                   </Row>
@@ -623,7 +605,7 @@ function CreateSubmission({ onNext }) {
                       <DropdownSelect
                         name="gender"
                         label="Gender"
-                       
+
                         width="200px"
                         height="50px"
                         options={[
@@ -632,7 +614,15 @@ function CreateSubmission({ onNext }) {
                           { value: "Other", label: "Other" }
                         ]}
                         onChange={handleGenderChange}
-                        
+
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Age Proof"
+                        value={proposerInfo.ageProof}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "proposerInfo", "ageProof")}
                       />
                     </Col>
                     <Col xs={24} sm={12} md={8} lg={6}>
@@ -641,6 +631,78 @@ function CreateSubmission({ onNext }) {
                         value={proposerInfo.fatherName}
                         readOnly={!isEditMode}
                         onChange={(e) => handleInputChange(e, "proposerInfo", "fatherName")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Address"
+                        value={proposerInfo.address}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "proposerInfo", "address")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Education"
+                        value={proposerInfo.education}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "proposerInfo", "education")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Occupation Type"
+                        value={proposerInfo.occupationType}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "proposerInfo", "occupationType")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Occupation Number"
+                        value={proposerInfo.occupationNumber}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "proposerInfo", "occupationNumber")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Company Name"
+                        value={proposerInfo.companyName}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "proposerInfo", "companyName")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Annual Income"
+                        value={proposerInfo.annualIncome}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "proposerInfo", "annualIncome")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Nationality"
+                        value={proposerInfo.nationality}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "proposerInfo", "nationality")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Country of Residence"
+                        value={proposerInfo.countryOfResidence}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "proposerInfo", "countryOfResidence")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Marital Status"
+                        value={proposerInfo.maritalStatus}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "proposerInfo", "maritalStatus")}
                       />
                     </Col>
                   </Row>
@@ -682,6 +744,30 @@ function CreateSubmission({ onNext }) {
                         onChange={(e) => handleInputChange(e, "nomineeDetails", "lastName")}
                       />
                     </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Date of Birth"
+                        value={nomineeDetails.dob}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "nomineeDetails", "dob")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Gender"
+                        value={nomineeDetails.gender}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "nomineeDetails", "gender")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Relationship to Proposer"
+                        value={nomineeDetails.relationshipToProposer}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "nomineeDetails", "relationshipToProposer")}
+                      />
+                    </Col>
                   </Row>
 
                   {/* Insurance Details Subsection */}
@@ -707,10 +793,66 @@ function CreateSubmission({ onNext }) {
                     </Col>
                     <Col xs={24} sm={12} md={8} lg={6}>
                       <FormInput
+                        label="Frequency"
+                        value={insuranceDetails.frequency}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "insuranceDetails", "frequency")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Entry Age"
+                        value={insuranceDetails.entryAge}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "insuranceDetails", "entryAge")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Exit Age"
+                        value={insuranceDetails.exitAge}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "insuranceDetails", "exitAge")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Premium Term"
+                        value={insuranceDetails.premiumTerm}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "insuranceDetails", "premiumTerm")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Benefit Term"
+                        value={insuranceDetails.benefitTerm}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "insuranceDetails", "benefitTerm")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
                         label="Premium Amount"
                         value={insuranceDetails.premiumAmount}
                         readOnly={!isEditMode}
                         onChange={(e) => handleInputChange(e, "insuranceDetails", "premiumAmount")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Extra Premium"
+                        value={insuranceDetails.extraPremium}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "insuranceDetails", "extraPremium")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        label="Tax Amount"
+                        value={insuranceDetails.taxAmount}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "insuranceDetails", "taxAmount")}
                       />
                     </Col>
                   </Row>
@@ -722,7 +864,7 @@ function CreateSubmission({ onNext }) {
                   <Row gutter={24}>
                     <Col xs={24} sm={12} md={8} lg={6}>
                       <FormInput
-                        label="Height (cm)"
+                        label="Height (in Cms)"
                         value={medicalHistory.height}
                         readOnly={!isEditMode}
                         onChange={(e) => handleInputChange(e, "medicalHistory", "height")}
@@ -730,13 +872,64 @@ function CreateSubmission({ onNext }) {
                     </Col>
                     <Col xs={24} sm={12} md={8} lg={6}>
                       <FormInput
-                        label="Weight (kg)"
-                        value={medicalHistory.weight}
+                        label="Name of disease/disability"
+                        value={medicalHistory.otherDiseases}
                         readOnly={!isEditMode}
-                        onChange={(e) => handleInputChange(e, "medicalHistory", "weight")}
+                        onChange={(e) => handleInputChange(e, "medicalHistory", "otherDiseases")}
                       />
                     </Col>
+                    
+                    <Col xs={24} sm={12} md={8} lg={8}>
+                      <FormInput
+                        label="Date of Hospitalisation/Surgery Done"
+                        value={medicalHistory.hospitalisation}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "medicalHistory", "hospitalisation")}
+                      />
+                    </Col>
+                    
+
+                    <Col xs={24} sm={12} md={8} lg={15}>
+                      <FormInput
+                       
+                        label="Do you have history of Diabetes Mellitus/High Blood Sugar/Low blood Sugar or High Cholesterol"
+                        value={medicalHistory.diabetesHistory}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "medicalHistory", "diabetesHistory")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+                        
+                        label="Date of Diagnosis"
+                        value={medicalHistory.dateOfDiagnosis}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "medicalHistory", "dateOfDiagnosis")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={10}>
+                      <FormInput
+                        
+                        label="Have you lost weight of 5 kgs or more in last 6 months"
+                        value={medicalHistory.weightChange}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "medicalHistory", "weightChange")}
+                      />
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={8}>
+                      <FormInput
+                        label="Currently Under treatment/recovered"
+                        value={medicalHistory.currentTreatment}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "medicalHistory", "currentTreatment")}
+                      />
+                    </Col>
+                   
+                    
+                   
+                    
                   </Row>
+
                 </div>
               </Col></Row></div></Col></Row>
       {/* Upload Modal */}

@@ -117,7 +117,7 @@ const AppLayout = () => {
         </Content>
         {!isLoginPage && (
           <Footer style={{ textAlign: 'center' }}>
-            Underwriter Workbench {new Date().getFullYear()}
+           Workbench {new Date().getFullYear()}
           </Footer>
         )}
       </Layout>

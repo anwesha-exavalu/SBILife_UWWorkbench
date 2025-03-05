@@ -16,11 +16,35 @@ const RequirementsTable = ({ onNext }) => {
       closeDate: moment('2024-03-20'),
       raisedBy: 'Somen',
       closedBy: 'Aditi',
-      requirementStatus: 'Open',
+      requirementStatus: 'Close',
       remarks: ''
     },
     {
       key: '2',
+      requirementCategory: 'Medical',
+      requirementSubCategory: 'Medical',
+      requirement: 'Pathology',
+      raiseDate: moment('2024-04-15'),
+      closeDate: moment('2024-05-02'),
+      raisedBy: 'Aditi',
+      closedBy: 'Arup',
+      requirementStatus: 'Open',
+      remarks: ''
+    },
+    {
+      key: '3',
+      requirementCategory: 'Medical',
+      requirementSubCategory: 'Medical',
+      requirement: 'Pathology',
+      raiseDate: moment('2024-03-10'),
+      closeDate: moment('2024-03-30'),
+      raisedBy: 'Kaushik',
+      closedBy: 'Kaushik',
+      requirementStatus: 'Close',
+      remarks: ''
+    },
+    {
+      key: '4',
       requirementCategory: 'Non Medical',
       requirementSubCategory: 'KYC',
       requirement: 'Photo ID Proof',
@@ -28,6 +52,30 @@ const RequirementsTable = ({ onNext }) => {
       closeDate: moment('2024-05-02'),
       raisedBy: 'Somen',
       closedBy: 'Somen',
+      requirementStatus: 'Close',
+      remarks: ''
+    },
+    {
+      key: '5',
+      requirementCategory: 'Non Medical',
+      requirementSubCategory: 'Proposal Form Related',
+      requirement: 'Bank Statement',
+      raiseDate: moment('2024-04-18'),
+      closeDate: moment('2024-05-05'),
+      raisedBy: 'Arup',
+      closedBy: 'Somen',
+      requirementStatus: 'Close',
+      remarks: ''
+    },
+    {
+      key: '6',
+      requirementCategory: 'Non Medical',
+      requirementSubCategory: 'Others',
+      requirement: 'Address Proof',
+      raiseDate: moment('2024-04-20'),
+      closeDate: moment('2024-05-10'),
+      raisedBy: 'Aditi',
+      closedBy: 'Arup',
       requirementStatus: 'Close',
       remarks: ''
     }
@@ -154,8 +202,8 @@ const RequirementsTable = ({ onNext }) => {
       width: 150,
       ellipsis: true,
       render: (text, record) => (
-        <DatePicker 
-          value={record.raiseDate} 
+        <DatePicker
+          value={record.raiseDate}
           onChange={(date) => {
             const newData = [...data];
             const index = newData.findIndex(item => item.key === record.key);
@@ -172,8 +220,8 @@ const RequirementsTable = ({ onNext }) => {
       width: 150,
       ellipsis: true,
       render: (text, record) => (
-        <DatePicker 
-          value={record.closeDate} 
+        <DatePicker
+          value={record.closeDate}
           onChange={(date) => {
             const newData = [...data];
             const index = newData.findIndex(item => item.key === record.key);
@@ -260,80 +308,74 @@ const RequirementsTable = ({ onNext }) => {
   };
 
   return (
-    <div 
-      style={{ 
-
+    <div
+      style={{
         flexDirection: 'column',
-    width: '100%',
-    justifyContent: 'center',
-    margin: '30px auto',
-    padding: '0 20px', /* Add padding for better spacing on smaller screens */
-   
-    boxShadow:' 0 2px 4px rgba(0, 0, 0, 0.8)',
-       
-        
+        width: '100%',
+        justifyContent: 'center',
+        margin: '30px auto',
+        padding: '0 20px',
+        boxShadow: ' 0 2px 4px rgba(0, 0, 0, 0.8)',
       }}
     >
-      <Table 
-        columns={columns} 
-        dataSource={data} 
+      <Table
+        columns={columns}
+        dataSource={data}
         pagination={true}
         scroll={{ x: 1700 }}
-        style={{ 
+        style={{
           width: '100%',
           tableLayout: 'auto'
         }}
         components={{
           header: {
             cell: (props) => (
-              <th 
-                {...props} 
-                style={{ 
-                  ...props.style, 
-                  backgroundColor: '#76a9e0', 
-                  color: 'white', 
+              <th
+                {...props}
+                style={{
+                  ...props.style,
+                  backgroundColor: '#76a9e0',
+                  color: 'white',
                   fontWeight: 'bold',
                   fontFamily: 'Arial, sans-serif',
                   padding: '8px',
                   whiteSpace: 'nowrap',
                   overflow: 'hidden',
                   textOverflow: 'ellipsis'
-                }} 
+                }}
               />
             )
           }
         }}
       />
-     
-      <div 
-        style={{ 
-          marginTop: '40px', 
+
+      <div
+        style={{
+          marginTop: '40px',
           textAlign: 'left',
           width: '100%'
         }}
       >
-        <Button 
-          type="primary" 
-          onClick={handleSubmit} 
+        <Button
+          type="primary"
+          onClick={handleSubmit}
           style={{ marginRight: '10px' }}
         >
           Submit
         </Button>
-        <Button  type="primary"  onClick={handlePrintLetter} >
+        <Button type="primary" onClick={handlePrintLetter} >
           Print Letter
         </Button>
-       
       </div>
-      <div 
-        style={{ 
-          marginTop: '10px', 
+      <div
+        style={{
+          marginTop: '10px',
           textAlign: 'right',
           width: '100%'
         }}
       >
-      <Button 
-          type="primary" 
-          
+        <Button
+          type="primary"
           style={{
             width: "10rem",
             marginBottom: "1rem",
@@ -345,7 +387,7 @@ const RequirementsTable = ({ onNext }) => {
         >
           Next
         </Button>
-        </div>
+      </div>
       <Modal
         title="Submit Confirmation"
         visible={submitModalVisible}

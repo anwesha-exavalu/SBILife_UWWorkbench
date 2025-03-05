@@ -92,3 +92,56 @@
   /* .responsiveCol:hover {
     transform: translateY(-5px);
   } */
+
+  /* Styles for Accept Suggestion and Refer to Doctor Buttons */
+.suggestion-button {
+  font-weight: 600;
+ 
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+}
+
+.acceptSuggestionButton {
+  
+  background-color: #1890ff;
+    /* Ant Design's green color */
+  width: 180px;
+  color: white;
+}
+
+/* .accept-suggestion-button:hover {
+  background-color: #73d13d;  /* Lighter green on hover */
+
+
+
+
+.refer-doctor-button {
+  background-color: #1890ff;
+  /* Ant Design's green color */
+width: auto;
+color: white;
+}
+
+.refer-doctor-button:hover {
+  background-color: #40a9ff;  /* Lighter blue on hover */
+  border-color: #40a9ff;
+}
+
+.refer-doctor-button:focus {
+  background-color: #0050b3;  /* Darker blue when focused */
+  border-color: #0050b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .suggestion-button {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+}

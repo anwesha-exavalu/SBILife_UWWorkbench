@@ -12,14 +12,19 @@ import {
   Divider,
   Typography,
   Image,
-  Space
+  Space,
+  Modal,
+  Form,
+  Input
 } from 'antd';
 import {
   UploadOutlined,
   RotateRightOutlined,
   ZoomInOutlined,
   DownloadOutlined,
-  LineChartOutlined
+  LineChartOutlined,
+  CheckCircleOutlined,
+  MedicineBoxOutlined
 } from '@ant-design/icons';
 import styles from "./ReportAnalysisScreen.module.css"
 
@@ -48,7 +53,9 @@ const ECGAnalysis = () => {
   const canvasRef = useRef(null);
   const rotatedCanvasRef = useRef(null);
   const responsePdfCanvasRef = useRef(null);
-  
+  const [isAcceptModalVisible, setIsAcceptModalVisible] = useState(false);
+  const [isReferModalVisible, setIsReferModalVisible] = useState(false);
+
 
   // Load PDF.js library from CDN
   useEffect(() => {
@@ -60,24 +67,24 @@ const ECGAnalysis = () => {
           const script = document.createElement('script');
           script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js';
           script.async = true;
-          
+
           await new Promise((resolve, reject) => {
             script.onload = resolve;
             script.onerror = reject;
             document.head.appendChild(script);
           });
-          
+
           // Set worker location
           window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
         }
-        
+
         setPdfJsLoaded(true);
       } catch (error) {
         console.error('Failed to load PDF.js:', error);
         message.error('Failed to load PDF processing library. Please try again later.');
       }
     };
-    
+
     loadPdfJs();
   }, []);
 
@@ -110,16 +117,16 @@ const ECGAnalysis = () => {
   const loadPdfAndGeneratePreview = async (file) => {
     try {
       setLoading(true);
-      
+
       // Convert file to ArrayBuffer
       const arrayBuffer = await file.arrayBuffer();
       setPdfDocData(arrayBuffer);
-      
+
       // Load PDF document using PDF.js
       const loadingTask = window.pdfjsLib.getDocument(arrayBuffer);
       const pdf = await loadingTask.promise;
       setPdfDocument(pdf);
-      
+
       // Get PDF rotation info
       const rotationInfo = [];
       for (let i = 1; i <= pdf.numPages; i++) {
@@ -130,10 +137,10 @@ const ECGAnalysis = () => {
         });
       }
       setPageRotationInfo(rotationInfo);
-      
+
       // Render the first page as preview
       await renderPdfPage(pdf, 1, canvasRef, false);
-      
+
       setLoading(false);
     } catch (error) {
       console.error('Error loading PDF:', error);
@@ -149,7 +156,7 @@ const ECGAnalysis = () => {
       console.error('Invalid PDF or canvas reference');
       return null;
     }
-  
+
     try {
       // Cancel any ongoing render tasks
       if (canvasRef.current.renderTask) {
@@ -159,42 +166,42 @@ const ECGAnalysis = () => {
           console.warn('Previous render task cancellation:', cancelError);
         }
       }
-  
+
       // Get the page
       const page = await pdf.getPage(pageNum);
-      
+
       // Determine viewport
-      const viewport = page.getViewport({ 
+      const viewport = page.getViewport({
         scale: zoomFactor,
-        rotation: rotate ? parseInt(rotationAngle) : 0 
+        rotation: rotate ? parseInt(rotationAngle) : 0
       });
-      
+
       // Get canvas and context
       const canvas = canvasRef.current;
       const context = canvas.getContext('2d');
-      
+
       // Clear previous content
       context.clearRect(0, 0, canvas.width, canvas.height);
-      
+
       // Set canvas dimensions
       canvas.height = viewport.height;
       canvas.width = viewport.width;
-      
+
       // Render PDF page with a new render task
       const renderTask = page.render({
         canvasContext: context,
         viewport: viewport
       });
-  
+
       // Store the render task on the canvas for potential cancellation
       canvasRef.current.renderTask = renderTask;
-      
+
       // Wait for rendering to complete
       await renderTask.promise;
-      
+
       // Convert canvas to base64 image data URL
       const imageUrl = canvas.toDataURL('image/jpeg');
-      
+
       // Set the appropriate preview state
       if (rotate) {
         setRotatedPreview(imageUrl);
@@ -203,7 +210,7 @@ const ECGAnalysis = () => {
       } else {
         setPdfPreview(imageUrl);
       }
-      
+
       return imageUrl;
     } catch (error) {
       // More detailed error handling
@@ -211,7 +218,7 @@ const ECGAnalysis = () => {
         console.warn('PDF rendering was cancelled');
         return null;
       }
-      
+
       console.error('Error rendering PDF page:', error);
       message.error(`Error rendering PDF: ${error.message}`);
       return null;
@@ -222,19 +229,19 @@ const ECGAnalysis = () => {
       }
     }
   };
-  
+
 
   // Load and render response PDF
   const loadResponsePdf = async (url) => {
     try {
       const response = await fetch(url);
       const arrayBuffer = await response.arrayBuffer();
-      
+
       // Load PDF document
       const loadingTask = window.pdfjsLib.getDocument(arrayBuffer);
       const pdf = await loadingTask.promise;
       setResponsePdfDocument(pdf);
-      
+
       // Check if the PDF has at least 2 pages
       if (pdf.numPages >= 2) {
         // Render the second page
@@ -253,18 +260,18 @@ const ECGAnalysis = () => {
   // Re-render both normal and rotated preview when zoom changes
   useEffect(() => {
     let isMounted = true;
-  
+
     const updatePreviews = async () => {
       try {
         if (pdfDocument && isMounted) {
           // Update normal preview with new zoom
           await renderPdfPage(pdfDocument, 1, canvasRef, false);
-          
+
           // Update rotated preview if needed
           if (rotateOption === 'Yes' && isMounted) {
             await renderPdfPage(pdfDocument, 1, rotatedCanvasRef, true);
           }
-          
+
           // Update response PDF preview if available
           if (responsePdfDocument && isMounted) {
             const pageNum = responsePdfDocument.numPages >= 2 ? 2 : 1;
@@ -275,9 +282,9 @@ const ECGAnalysis = () => {
         console.error('Preview update error:', error);
       }
     };
-    
+
     updatePreviews();
-    
+
     // Cleanup function
     return () => {
       isMounted = false;
@@ -292,18 +299,18 @@ const ECGAnalysis = () => {
     }
 
     setLoading(true);
-    
+
     try {
       // Render the rotated page
       await renderPdfPage(pdfDocument, 1, rotatedCanvasRef, true);
-      
+
       // Create a blob URL for download simulation
       const blob = new Blob([pdfDocData], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       setRotatedPdfUrl(url);
-      
+
       message.success(`PDF rotated by ${rotationAngle}° successfully in preview!`);
-      
+
       setLoading(false);
     } catch (error) {
       console.error('Error rotating PDF:', error);
@@ -322,12 +329,12 @@ const ECGAnalysis = () => {
     setAnalyzing(true);
     setResponsePdfDocument(null);
     setResponsePdfPreview(null);
-    
+
     try {
       // Create form data
       const formData = new FormData();
       formData.append('file', fileList[0].originFileObj);
-      
+
       // Make API call
       const response = await fetch('http://localhost:8000/ecg_analysis', {
         method: 'POST',
@@ -336,19 +343,19 @@ const ECGAnalysis = () => {
           'accept': 'application/json',
         }
       });
-      
+
       if (!response.ok) {
         throw new Error(`Server responded with status: ${response.status}`);
       }
-      
+
       // Check if the response is JSON or blob
       const contentType = response.headers.get('content-type');
-      
+
       if (contentType && contentType.includes('application/json')) {
         // Handle JSON response
         const result = await response.json();
         setModelResponse(result.analysis || "ECG analysis completed successfully.");
-        
+
         // If the JSON response contains a PDF URL
         if (result.pdf_url) {
           // Fetch the PDF from the provided URL
@@ -379,7 +386,7 @@ const ECGAnalysis = () => {
         setModelResponse("ECG analysis completed successfully. You can download the PDF report below.");
         await loadResponsePdf(url);
       }
-      
+
       message.success('ECG analysis completed');
     } catch (error) {
       console.error('Error analyzing ECG:', error);
@@ -407,22 +414,33 @@ const ECGAnalysis = () => {
     };
   }, [rotatedPdfUrl, outputPdfUrl]);
 
+  // Handler for Accept Suggestion
+  const handleAcceptSuggestion = () => {
+    setIsAcceptModalVisible(true);
+  };
+
+  // Handler for Refer to Doctor
+  const handleReferToDoctor = () => {
+    setIsReferModalVisible(true);
+  };
+
+
   return (
     <div className={styles.container}>
-       <Title level={2} className={styles.mainTitle}>ECG Analyzer</Title>
-      
+      <Title level={2} className={styles.mainTitle}>ECG Analyzer</Title>
+
       {/* Hidden canvases for PDF rendering */}
       <div style={{ display: 'none' }}>
         <canvas ref={canvasRef}></canvas>
         <canvas ref={rotatedCanvasRef}></canvas>
         <canvas ref={responsePdfCanvasRef}></canvas>
       </div>
-      
+
       <Row gutter={24}>
         {/* Left Sidebar / Configuration */}
         <Col span={6} className={styles.responsiveCol}>
-        <Card 
-            title="Upload and Configure PDF" 
+          <Card
+            title="Upload and Configure PDF"
             className={styles.card}
             bodyStyle={{ className: styles.configuratorSection }}
           >
@@ -438,7 +456,7 @@ const ECGAnalysis = () => {
               onChange={handleFileUpload}
               maxCount={1}
             >
-              <Button icon={<UploadOutlined />} loading={!pdfJsLoaded}  className={styles.uploadButton}>
+              <Button icon={<UploadOutlined />} loading={!pdfJsLoaded} className={styles.uploadButton}>
                 Upload PDF
               </Button>
             </Upload>
@@ -475,7 +493,7 @@ const ECGAnalysis = () => {
                 </Select>
               </div>
             )}
-
+            {/* 
             <div style={{ marginTop: '16px' }}>
               <Text strong>Zoom Factor for Image Resolution</Text>
               <Slider
@@ -485,7 +503,7 @@ const ECGAnalysis = () => {
                 onChange={(value) => setZoomFactor(value)}
                 disabled={!pdfDocument}
               />
-            </div>
+            </div> */}
           </Card>
 
           {pageRotationInfo.length > 0 && (
@@ -502,16 +520,16 @@ const ECGAnalysis = () => {
           <Row gutter={[16, 16]}>
             {/* PDF Preview */}
             <Col span={12} className={styles.responsiveCol}>
-              <Card title="Preview First Page"  className={styles.card}>
+              <Card title="Preview First Page" className={styles.card}>
                 {loading && <div style={{ textAlign: 'center', margin: '20px' }}>Loading...</div>}
                 {!loading && pdfPreview ? (
-                  <Image 
-                    src={pdfPreview} 
-                    alt="PDF Preview" 
-                    style={{ width: '100%' }} 
+                  <Image
+                    src={pdfPreview}
+                    alt="PDF Preview"
+                    style={{ width: '100%' }}
                   />
                 ) : !loading && (
-                    <div className={styles.emptyPreview}>
+                  <div className={styles.emptyPreview}>
                     <Text type="secondary">Upload a PDF to see preview</Text>
                   </div>
                 )}
@@ -523,33 +541,22 @@ const ECGAnalysis = () => {
               {rotateOption === 'Yes' && (
                 <Card style={{ boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)' }}
                   title={`Rotated First Page Preview (${rotationAngle}°)`}
-                  extra={
-                    rotatedPdfUrl && (
-                      <Button 
-                        type="primary" 
-                        icon={<DownloadOutlined />}
-                        size="small"
-                        onClick={() => window.open(rotatedPdfUrl, '_blank')}
-                      >
-                        Download Rotated PDF
-                      </Button>
-                    )
-                  }
+                 
                 >
                   {loading && <div style={{ textAlign: 'center', margin: '20px' }}>Loading...</div>}
                   {!loading && rotatedPreview ? (
-                    <Image 
-                      src={rotatedPreview} 
-                      alt="Rotated PDF Preview" 
-                      style={{ width: '100%' }} 
+                    <Image
+                      src={rotatedPreview}
+                      alt="Rotated PDF Preview"
+                      style={{ width: '100%' }}
                     />
                   ) : !loading && (
-                    <div style={{ 
-                      background: '#f0f0f0', 
-                      height: '300px', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center' 
+                    <div style={{
+                      background: '#f0f0f0',
+                      height: '300px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
                     }}>
                       <Text type="secondary">Rotate the PDF to see preview</Text>
                     </div>
@@ -560,11 +567,11 @@ const ECGAnalysis = () => {
 
             {/* Analysis Section */}
             <Col span={24}>
-              <Card title="ECG Analysis"  className={styles.card}>
+              <Card title="ECG Analysis" className={styles.card}>
                 <Space direction="vertical" style={{ width: '100%' }}>
-                  <Button 
-                    type="primary" 
-                    icon={<LineChartOutlined />} 
+                  <Button
+                    type="primary"
+                    icon={<LineChartOutlined />}
                     loading={analyzing}
                     onClick={handleAnalysis}
                     disabled={!pdfDocument}
@@ -579,7 +586,7 @@ const ECGAnalysis = () => {
                       <Card title="Analysis Results" bordered={false}>
                         <Space direction="vertical" style={{ width: '100%' }}>
                           <Paragraph>{modelResponse}</Paragraph>
-                          
+
                           {/* Response PDF Page 2 Preview */}
                           {responsePdfPreview && (
                             <div>
@@ -587,18 +594,42 @@ const ECGAnalysis = () => {
                               <Image
                                 src={responsePdfPreview}
                                 alt="Response PDF Page 2"
-                                style={{ width: '100%', maxHeight: '800px', objectFit: 'contain' }}
+                                style={{ width: '120%', maxHeight: '900px', objectFit: 'fill' }}
                               />
                             </div>
                           )}
+                          {/* <Space style={{ width: '100%', justifyContent: 'center', marginTop: '16px' }}> */}
+                          <div style={{display:"flex", gap:"20px",alignItems:"center",justifyContent:"center"}}>
+                            <Button
+                              type="primary"
+                              icon={<CheckCircleOutlined />}
+                              onClick={handleAcceptSuggestion}
+                              size="large"
+                              className={styles.acceptSuggestionButton}
+                            >
+                              Accept Suggestion
+                            </Button>
+                            <Button
+                              type="default"
+                              icon={<MedicineBoxOutlined />}
+                              onClick={handleReferToDoctor}
+                              size="large"
+                              className={styles.acceptSuggestionButton}
+                            >
+                              Refer to Doctor
+                            </Button>
+                            </div>
+                          {/* </Space> */}
+
+
                         </Space>
                       </Card>
                     </>
                   )}
-                  
+
                   {outputPdfUrl && (
-                    <Button 
-                      type="primary" 
+                    <Button
+                      type="primary"
                       icon={<DownloadOutlined />}
                       onClick={() => window.open(outputPdfUrl, '_blank')}
                       size="large"
@@ -610,9 +641,73 @@ const ECGAnalysis = () => {
                 </Space>
               </Card>
             </Col>
+
+            {/* Accept Suggestion Modal */}
+            <Modal
+              title="Confirm Suggestion Acceptance"
+              visible={isAcceptModalVisible}
+              onOk={() => {
+                message.success('Suggestion Accepted');
+                setIsAcceptModalVisible(false);
+              }}
+              onCancel={() => setIsAcceptModalVisible(false)}
+            >
+              <p>Are you sure you want to accept the medical suggestion?</p>
+              <p>This will record the recommendation in your health records.</p>
+            </Modal>
+
+            {/* Refer to Doctor Modal */}
+            <Modal
+              title="Refer to Doctor"
+              visible={isReferModalVisible}
+              footer={null}
+              onCancel={() => setIsReferModalVisible(false)}
+            >
+              <Form layout="vertical">
+                <Form.Item
+                  name="doctorName"
+                  label="Doctor's Name"
+                  rules={[{ required: true, message: 'Please input doctor\'s name' }]}
+                >
+                  <Input placeholder="Enter doctor's name" />
+                </Form.Item>
+
+                <Form.Item
+                  name="hospital"
+                  label="Hospital/Clinic"
+                  rules={[{ required: true, message: 'Please input hospital/clinic name' }]}
+                >
+                  <Input placeholder="Enter hospital or clinic name" />
+                </Form.Item>
+
+                <Form.Item
+                  name="additionalNotes"
+                  label="Additional Notes"
+                >
+                  <Input.TextArea
+                    rows={4}
+                    placeholder="Any additional notes or concerns to share with the doctor"
+                  />
+                </Form.Item>
+
+                <Form.Item>
+                  <Button
+                    type="primary"
+                    block
+                    onClick={() => {
+                      message.success('Referral sent successfully');
+                      setIsReferModalVisible(false);
+                    }}
+                  >
+                    Send Referral
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Modal>
           </Row>
         </Col>
       </Row>
+
     </div>
   );
 };

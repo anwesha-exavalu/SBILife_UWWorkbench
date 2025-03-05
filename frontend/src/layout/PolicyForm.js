@@ -488,10 +488,7 @@ function PolicyForm() {
           </div>
         </div>
       </Col>
-      <Col span={4}>
-        <Documents />
-      </Col>
-
+    
       
     </Row>
   );

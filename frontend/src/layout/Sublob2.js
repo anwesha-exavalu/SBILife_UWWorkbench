@@ -14,6 +14,7 @@ import CreateSubmission from '../SidebarComponents/CreateSubmission';
 import Documents from './Documents';
 import ReportAnalysis from '../lob/commercialproperty/ReportAnalysis';
 import RequirementsTable from '../lob/commercialproperty/RequirementTable';
+import ECGAnalysis from '../layout/ReportAnalysisScreen';
 
 const Sublob2 = (props) => {
   const sections = [
@@ -149,11 +150,11 @@ const Sublob2 = (props) => {
       <div className="mt-4 px-4">
         {activeSection === 'policyInfo' && <CreateSubmission onNext={goToNextSection} />}
         {activeSection === 'requirements' && <RequirementsTable onNext={goToNextSection}/>}
-        {activeSection === 'reportAnalysis' && <ReportAnalysis onNext={goToNextSection}/>}
+        {activeSection === 'reportAnalysis' && <ECGAnalysis onNext={goToNextSection}/>}
         {activeSection === 'uw' && <UWQuestions onNext={goToNextSection} />}
       </div>
 
-      <Documents />
+    
     </div>
   );
 };
