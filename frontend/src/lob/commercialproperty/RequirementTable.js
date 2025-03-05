@@ -319,7 +319,7 @@ const RequirementsTable = ({ onNext }) => {
         >
           Submit
         </Button>
-        <Button onClick={handlePrintLetter}>
+        <Button  type="primary"  onClick={handlePrintLetter} >
           Print Letter
         </Button>
        
