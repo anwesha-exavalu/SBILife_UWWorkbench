@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Card, Alert, Spin, Select, Image, Button, Switch } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
-import inspectionReport from '../assets/documents/Sample Inspection Report.pdf'
-import corelogicReport from '../assets/documents/riskmeter_report.pdf'
+import inspectionReport from '../../assets/documents/Sample Inspection Report.pdf'
+import corelogicReport from '../../assets/documents/riskmeter_report.pdf'
 
 const { Option } = Select;
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL;
 const openAiApiKey = process.env.REACT_APP_OPENAI_API_KEY;
 
-function ReportAnalysis() {
+function ReportAnalysis({ onNext }) {
   const [insights, setInsights] = useState(
     {
       "summary": {
@@ -316,7 +316,18 @@ function ReportAnalysis() {
   }, [query.value, publicData]);  // Dependency on `query` only, not `payload`
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{
+
+      flexDirection: 'column',
+      width: '100%',
+      justifyContent: 'center',
+      margin: '30px auto',
+      padding: '0 20px', /* Add padding for better spacing on smaller screens */
+
+      boxShadow: ' 0 2px 4px rgba(0, 0, 0, 0.8)',
+
+
+    }}>
       <Switch
         checked={publicData}
         onChange={() => setPublicData(!publicData)}
@@ -434,9 +445,9 @@ function ReportAnalysis() {
                     <Card>
                       {insights.underwriting_risks.title && <h5>{insights.underwriting_risks.title}</h5>}
                       <ul>
-                      {insights.underwriting_risks.content.map((item, index) => (
-                        <li key={index}>{item}</li>
-                      ))}
+                        {insights.underwriting_risks.content.map((item, index) => (
+                          <li key={index}>{item}</li>
+                        ))}
                       </ul>
                     </Card>
                     {insights.public_data && (
@@ -461,6 +472,28 @@ function ReportAnalysis() {
           </div>
         </Card>
       )}
+      <div
+        style={{
+          marginTop: '10px',
+          textAlign: 'right',
+          width: '100%'
+        }}
+      >
+        <Button
+          type="primary"
+
+          style={{
+            width: "10rem",
+            marginBottom: "1rem",
+            marginTop: "1rem",
+            marginRight: "3px",
+            backgroundColor: "blue",
+          }}
+          onClick={onNext}
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 }

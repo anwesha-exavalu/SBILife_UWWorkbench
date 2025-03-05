@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./UWQuestions.css";
-import { Col, Row, Button, Popover } from "antd";
-// import Documents from "../../layout/RightSidebar";
+import { Col, Row, Button, Popover, Table } from "antd";
 import ModalDesign from "../../layout/Modal";
 import FormInput from "../../components/FormInput";
 import DropdownSelect from "../../components/FormDropdown";
@@ -9,138 +8,255 @@ import PriorityPopup from "../../SidebarComponents/PriorityPopup";
 
 const uwquestionsData = [
   {
-    question: "Is the applicant a subsidiary of another entity?",
-    response: "no",
-    comment:
-      "The applicant operates independently and is not owned by another entity.",
+    question: "Whether age proof, age at entry and exit has been verified as per product",
+    response: "",
+    comment: "",
+    options: [
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" },
+      { value: "na", label: "Not Applicable" }
+    ]
   },
   {
-    question: "Does the applicant have any subsidiaries?",
-    response: "yes",
-    comment:
-      "The applicant has subsidiaries, which may affect risk assessment.",
+    question: "Whether KYC/AML norms for proposer/witness/ premium payer are fulfilled (if required as per guidelines)",
+    response: "",
+    comment: "",
+    options: [
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" },
+      { value: "na", label: "Not Applicable" }
+    ]
   },
   {
-    question: "Is a formal safety program in operation?",
-    response: "no",
-    comment: "There is no formal safety program in place to mitigate risks.",
+    question: "Whether document like address proof, id proof, proof of source of funding are verified for authenticity and attestation of proposer and authorized sales representative (if required as per the guidelines)",
+    response: "",
+    comment: "",
+    options: [
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" },
+      { value: "na", label: "Not Applicable" }
+    ]
   },
   {
-    question: "Any exposure to flammables, explosives, and chemicals?",
-    response: "na",
-    comment:
-      "Not applicable; the applicant does not engage in activities involving flammables or explosives.",
+    question: "Confirm whether proposal form has been witnessed by IA/CIF?",
+    response: "",
+    comment: "",
+    options: [
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" },
+      { value: "na", label: "Not Applicable" }
+    ]
   },
   {
-    question: "Any other insurance with this company?",
-    response: "no",
-    comment:
-      "The applicant does not hold any additional policies with our company.",
+    question: "Whether occupation details with exact nature of duties and name of the employer has been given? Whether occupation questionnaire has been obtained if the occupation is hazardous as per UW manual",
+    response: "",
+    comment: "",
+    options: [
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" },
+      { value: "test", label: "Test" }
+    ]
   },
   {
-    question:
-      "Any policy or coverage declined, canceled, or non-renewed during the prior 3 years?",
-    response: "na",
-    comment:
-      "Not applicable; no relevant history of declined or canceled policies.",
+    question: "Confirm, if plan details like sum assured, term, SAMF (for ULIP) rider details (if Opted) are entered as per proposal form",
+    response: "",
+    comment: "",
+    options: [
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" },
+      { value: "na", label: "Not Applicable" }
+    ]
   },
   {
-    question: "Any uncorrected fire code violations?",
-    response: "yes",
-    comment:
-      "There are existing fire code violations that need to be addressed.",
+    question: "Confirm whether all alterations, overwriting or cutting in proposal form has been properly authenticated",
+    response: "",
+    comment: "",
+    options: [
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" },
+      { value: "na", label: "Not Applicable" }
+    ]
   },
   {
-    question:
-      "Has the applicant had a foreclosure, repossession, or bankruptcy during the last five years?",
-    response: "no",
-    comment:
-      "The applicant has not faced any financial setbacks in the past five years.",
+    question: "Whether client ID has been checked (new or Existing)",
+    response: "",
+    comment: "",
+    options: [
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" },
+      { value: "na", label: "Not Applicable" }
+    ]
   },
+  {
+    question: "Confirm whether premium has been paid by proposer?",
+    response: "",
+    comment: "",
+    options: [
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" },
+      { value: "na", label: "Not Applicable" }
+    ]
+  },
+  {
+    question: "Confirm whether Source Of Funding has been clearly and fully established",
+    response: "",
+    comment: "",
+    options: [
+      { value: "proposer", label: "Proposer" },
+      { value: "lifeAssured", label: "Life Assured" },
+      { value: "parentsSpouse", label: "Parents/Spouse" },
+      { value: "company", label: "Company" }
+    ]
+  },
+  {
+    question: "Confirm whether proposal has been processed on the basis of income of",
+    response: "",
+    comment: "",
+    options: [
+      { value: "self", label: "Self" },
+      { value: "spouse", label: "Spouse" },
+      { value: "na", label: "Not Applicable" }
+    ]
+  },
+  {
+    question: "All medical reports as per SUC received/uploaded",
+    response: "",
+    comment: "",
+    options: [
+      { value: "yes", label: "Yes" },
+      { value: "no", label: "No" },
+      { value: "na", label: "Not Applicable" }
+    ]
+  }
 ];
 
 const UWQuestions = ({ onNext }) => {
   const [questions, setQuestions] = useState(uwquestionsData);
   const [notes, setNotes] = useState(" ");
-  // const [uwnotes, setUWNotes] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
 
-  // const handleResponseChange = (index, newResponse) => {
-  //   const updatedQuestions = [...questions];
-  //   updatedQuestions[index].response = newResponse;
-  //   setQuestions(updatedQuestions);
-  // };
+  // Responsive check
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
+  }, []);
+
+  const handleResponseChange = (index, newResponse) => {
+    const updatedQuestions = [...questions];
+    updatedQuestions[index].response = newResponse;
+    setQuestions(updatedQuestions);
+  };
 
   const handleCommentChange = (index, newComment) => {
     const updatedQuestions = [...questions];
     updatedQuestions[index].comment = newComment;
     setQuestions(updatedQuestions);
   };
+
   const record = {
     client: "Kew Gardens Property",
     lob: "Commercial Property"
   };
 
+  const columns = [
+    {
+      title: 'Questions',
+      dataIndex: 'question',
+      key: 'question',
+      width: '50%',
+      render: (text) => <b>{text}</b>
+    },
+    {
+      title: 'Response',
+      dataIndex: 'response',
+      key: 'response',
+      width: '20%',
+      render: (text, record, index) => (
+        <DropdownSelect
+          options={record.options}
+          required={true}
+          value={record.response}
+          onChange={(value) => handleResponseChange(index, value)}
+          style={{ width: '100%' }}
+        />
+      )
+    },
+    {
+      title: 'Comment',
+      dataIndex: 'comment',
+      key: 'comment',
+      width: '30%',
+      render: (text, record, index) => (
+        <FormInput
+          value={record.comment}
+          onChange={(e) => handleCommentChange(index, e.target.value)}
+          style={{ width: '100%' }}
+        />
+      )
+    }
+  ];
+
   return (
     <Row>
       <Col span={24}>
-        <div className="mainContainer" id="uw">
-          {/* <div className="side-by-side-container"> */}
+        <div 
+          className="mainContainer" 
+          id="uw" 
+          style={{ 
+            width: '100%', 
+            overflowX: 'auto',
+            padding: isMobile ? '10px' : '20px'
+          }}
+        >
           <div className="uw-questions-section">
             <h2>UW Questions</h2>
-            <table id="underwriting-Table">
-              <thead>
-                <tr>
-                  <th className="table-header" style={{ width: "40%" }}>
-                    Questions
-                  </th>
-                  <th className="table-header" style={{ width: "15%" }}>
-                    Response
-                  </th>
-                  <th className="table-header" style={{ width: "45%" }}>
-                    Comment
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {questions.map((item, index) => (
-                  <tr key={index}>
-                    <td>
-                      <b>{item.question}</b>
-                    </td>
-                    <td>
-                      <DropdownSelect
-                        options={[
-                          { value: "yes", label: "Yes" },
-                          { value: "no", label: "No" },
-                          { value: "na", label: "Not Applicable" },
-                        ]}
-                        required={true}
-                        value={item.response}
-                      />
-                    </td>
-                    <td>
-                      <FormInput
-                        value={item.comment}
-                        onChange={(e) =>
-                          handleCommentChange(index, e.target.value)
-                        }
-                      />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            {/* </div> */}
+            <Table 
+              columns={columns}
+              dataSource={questions}
+              pagination={false}
+              scroll={{ x: 800 }}
+              style={{ 
+                width: '100%',
+                overflowX: 'auto'
+              }}
+              components={{
+                header: {
+                  cell: (props) => (
+                    <th 
+                      {...props} 
+                      style={{ 
+                        ...props.style, 
+                        backgroundColor: '#76a9e0', 
+                        color: 'white', 
+                        fontWeight: 'bold',
+                        fontFamily: 'Arial, sans-serif',
+                        padding: '8px',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
+                      }} 
+                    />
+                  )
+                }
+              }}
+            />
           </div>
 
-          {/* System Recommended Decision */}
-
-
-
-          {/* Override Decision Section */}
           <div
             className="override-decision-container"
-            style={{ marginBottom: 20 }}
+            style={{ 
+              marginBottom: 20, 
+              width: '100%',
+              padding: isMobile ? '10px' : '20px'
+            }}
           >
             <h5>Notes</h5>
             <textarea
@@ -158,8 +274,8 @@ const UWQuestions = ({ onNext }) => {
                 resize: "vertical",
               }}
             />
-            <h5 style={{ marginTop: "20px" }}>Claim Propensity</h5>
-            <div
+            {/* <h5 style={{ marginTop: "20px" }}>Claim Propensity</h5> */}
+            {/* <div
               style={{
                 padding: '16px',
                 border: '1px solid #e1e1e1',
@@ -184,15 +300,15 @@ const UWQuestions = ({ onNext }) => {
                     fontSize: "16px",
                     width:"150px",
                     height:"40px",
-                    padding: "5px 20px", // Balanced padding for better spacing
+                    padding: "5px 20px",
                     boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
                     fontWeight: "600",
-                    borderRadius: "4px", // Rounded corners for a modern look
+                    borderRadius: "4px",
                     color: "white",
                     backgroundColor:"#FAAF25",
                     border: "none",
                     cursor: "pointer",
-                    lineHeight: "1.5", // Ensures text is vertically centered
+                    lineHeight: "1.5",
                     display: "inline-block",
                     textAlign: "center",
                   }}
@@ -200,12 +316,12 @@ const UWQuestions = ({ onNext }) => {
                   Risk - Medium
                 </Button>
               </Popover>
-            </div>
+            </div> */}
             <div className="decision-container">
               <ModalDesign />
             </div>
           </div>
-          <Row gutter={16}>
+          {/* <Row gutter={16}>
             <Col span={20}></Col>
             <Col span={4}>
               <div>
@@ -218,19 +334,15 @@ const UWQuestions = ({ onNext }) => {
                     marginTop: "1rem",
                     marginRight: "3px",
                     backgroundColor: "blue",
-                  }}
+                  }} 
                 >
                   Next
                 </Button>
               </div>
             </Col>
-          </Row>
+          </Row> */}
         </div>
       </Col>
-      {/* Uncomment and use if Documents component is needed in future */}
-      {/* <Col span={4}>
-        <Documents />
-      </Col> */}
     </Row>
   );
 };
