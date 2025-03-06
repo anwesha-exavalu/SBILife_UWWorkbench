@@ -327,7 +327,7 @@ const UWQuestions = ({ onNext }) => {
                   borderRight: "1px solid black",
                 }}
               >
-                Override Decision
+                Final Decision
               </div>
               <div style={{ padding: "10px" }}>
                 <Select

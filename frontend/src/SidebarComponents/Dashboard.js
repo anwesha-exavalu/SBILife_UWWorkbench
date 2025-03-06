@@ -33,14 +33,35 @@ const MyTableComponent = ({
           onClick: () => handleRowClick(record),
           className: "clickable-row",
         })}
-        pagination={{ pageSize: 3 }}
+        pagination={true}
         components={{
           header: {
             cell: ({ className, ...restProps }) => (
               <th
                 {...restProps}
                 style={{
-                  color: "#fff", // Set header text color here
+                  color: "#fff",
+                  fontFamily: "inherit", // Inherit font family from parent
+                }}
+              />
+            ),
+          },
+          body: {
+            row: ({ className, style, ...restProps }) => (
+              <tr
+                {...restProps}
+                style={{
+                  ...style,
+                  fontFamily: "inherit", // Inherit font family from parent
+                }}
+              />
+            ),
+            cell: ({ className, style, ...restProps }) => (
+              <td
+                {...restProps}
+                style={{
+                  ...style,
+                  fontFamily: "inherit", // Inherit font family from parent
                 }}
               />
             ),
@@ -59,7 +80,7 @@ const data = {
       lob: "3",
       status: "Fresh Case",
       limit: "High",
-      date: "NO",
+      date: "No",
       broker: "Agency",
       priority: "Individual",
     },
@@ -69,7 +90,7 @@ const data = {
       lob: "12",
       status: "Pending Requirement",
       limit: "High",
-      date: "YES",
+      date: "Yes",
       broker: "Alternate",
       priority: "Individual",
     },
@@ -81,7 +102,7 @@ const data = {
       lob: "2",
       status: "Fresh Case",
       limit: "High",
-      date: "NO",
+      date: "No",
       broker: "Direct",
       priority: "Individual",
     },

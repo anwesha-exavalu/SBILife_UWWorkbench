@@ -486,7 +486,7 @@ function CreateSubmission({ onNext }) {
             </Row>
             <h4 className={styles.PageTitle}>Proposal Number: 2467909</h4>
             <Row gutter={16}>
-           
+
               {/* Proposal Info Section */}
               <Col span={24}>
                 <div className={styles.widgetBox}>
@@ -605,17 +605,21 @@ function CreateSubmission({ onNext }) {
                       <DropdownSelect
                         name="gender"
                         label="Gender"
-
                         width="200px"
                         height="50px"
+                        defaultValue={{ value: "Male", label: "Male" }} // Default selected value
                         options={[
                           { value: "Male", label: "Male" },
                           { value: "Female", label: "Female" },
                           { value: "Other", label: "Other" }
                         ]}
                         onChange={handleGenderChange}
-
+                        style={{
+                          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)", // Adding box shadow
+                          borderRadius: "5px" // Optional: Adding rounded corners for better aesthetics
+                        }}
                       />
+
                     </Col>
                     <Col xs={24} sm={12} md={8} lg={6}>
                       <FormInput
@@ -753,13 +757,24 @@ function CreateSubmission({ onNext }) {
                       />
                     </Col>
                     <Col xs={24} sm={12} md={8} lg={6}>
-                      <FormInput
+                      <DropdownSelect
+                        name="gender"
                         label="Gender"
-                        value={nomineeDetails.gender}
-                        readOnly={!isEditMode}
-                        onChange={(e) => handleInputChange(e, "nomineeDetails", "gender")}
+                        width="200px"
+                        height="50px"
+                        defaultValue={{ value: "Female", label: "Female" }} // Default selected value
+                        options={[
+                          { value: "Male", label: "Male" },
+                          { value: "Female", label: "Female" },
+                          { value: "Other", label: "Other" }
+                        ]}
+                        onChange={handleGenderChange}
+                        style={{
+                          boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)", // Adding box shadow
+                          borderRadius: "5px" // Optional: Adding rounded corners for better aesthetics
+                        }}
                       />
-                    </Col>
+                      </Col>
                     <Col xs={24} sm={12} md={8} lg={6}>
                       <FormInput
                         label="Relationship to Proposer"
@@ -870,6 +885,36 @@ function CreateSubmission({ onNext }) {
                         onChange={(e) => handleInputChange(e, "medicalHistory", "height")}
                       />
                     </Col>
+                    <Col xs={24} sm={12} md={8} lg={8}>
+                      <FormInput
+                        label="Currently Under treatment/recovered"
+                        value={medicalHistory.currentTreatment}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "medicalHistory", "currentTreatment")}
+                      />
+                    </Col>
+
+                    <Col xs={24} sm={12} md={8} lg={8}>
+                      <FormInput
+                        label="Date of Hospitalisation/Surgery Done"
+                        value={medicalHistory.hospitalisation}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "medicalHistory", "hospitalisation")}
+                      />
+                    </Col>
+
+                    </Row>
+                    <Row gutter={24}>
+                    <Col xs={24} sm={12} md={8} lg={6}>
+                      <FormInput
+
+                        label="Date of Diagnosis"
+                        value={medicalHistory.dateOfDiagnosis}
+                        readOnly={!isEditMode}
+                        onChange={(e) => handleInputChange(e, "medicalHistory", "dateOfDiagnosis")}
+                      />
+                    </Col>
+                   
                     <Col xs={24} sm={12} md={8} lg={6}>
                       <FormInput
                         label="Name of disease/disability"
@@ -879,56 +924,34 @@ function CreateSubmission({ onNext }) {
                       />
                     </Col>
                     
-                    <Col xs={24} sm={12} md={8} lg={8}>
-                      <FormInput
-                        label="Date of Hospitalisation/Surgery Done"
-                        value={medicalHistory.hospitalisation}
-                        readOnly={!isEditMode}
-                        onChange={(e) => handleInputChange(e, "medicalHistory", "hospitalisation")}
-                      />
-                    </Col>
-                    
 
-                    <Col xs={24} sm={12} md={8} lg={15}>
-                      <FormInput
-                       
-                        label="Do you have history of Diabetes Mellitus/High Blood Sugar/Low blood Sugar or High Cholesterol"
-                        value={medicalHistory.diabetesHistory}
-                        readOnly={!isEditMode}
-                        onChange={(e) => handleInputChange(e, "medicalHistory", "diabetesHistory")}
-                      />
-                    </Col>
-                    <Col xs={24} sm={12} md={8} lg={6}>
-                      <FormInput
-                        
-                        label="Date of Diagnosis"
-                        value={medicalHistory.dateOfDiagnosis}
-                        readOnly={!isEditMode}
-                        onChange={(e) => handleInputChange(e, "medicalHistory", "dateOfDiagnosis")}
-                      />
-                    </Col>
+                    </Row>
+                    <Row gutter={24}>
                     <Col xs={24} sm={12} md={8} lg={10}>
                       <FormInput
-                        
+
                         label="Have you lost weight of 5 kgs or more in last 6 months"
                         value={medicalHistory.weightChange}
                         readOnly={!isEditMode}
                         onChange={(e) => handleInputChange(e, "medicalHistory", "weightChange")}
                       />
                     </Col>
-                    <Col xs={24} sm={12} md={8} lg={8}>
+                    
+                    </Row>
+                    <Row gutter={24}>
+                    <Col xs={24} sm={12} md={8} lg={15}>
                       <FormInput
-                        label="Currently Under treatment/recovered"
-                        value={medicalHistory.currentTreatment}
+
+                        label="Do you have history of Diabetes Mellitus/High Blood Sugar/Low blood Sugar or High Cholesterol"
+                        value={medicalHistory.diabetesHistory}
                         readOnly={!isEditMode}
-                        onChange={(e) => handleInputChange(e, "medicalHistory", "currentTreatment")}
+                        onChange={(e) => handleInputChange(e, "medicalHistory", "diabetesHistory")}
                       />
                     </Col>
-                   
                     
-                   
-                    
-                  </Row>
+                    </Row>
+
+                
 
                 </div>
               </Col></Row></div></Col></Row>
