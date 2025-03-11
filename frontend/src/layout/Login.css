@@ -1,106 +1,109 @@
-/* Login container styling */
 .login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f5f5f5;
-  }
-  
-  /* Login box styling */
-  .login-box {
-    background-color: white;
-    padding: 4rem; /* Increased padding for better proportions */
-    border-radius: 8px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 450px; /* Increased width */
-    height: 550px; /* Increased height */
-  }
-  
-  /* Title styling */
-  .login-title {
-    font-size: 2rem; /* Larger title font */
-    font-weight: bold;
-    margin-bottom: 1rem; /* Adjusted spacing */
-  }
-  
-  .welcome {
-    color: #007bff; /* Blue color */
-  }
-  
-  /* Subtitle styling */
-  .login-subtitle {
-    font-size: 1.2rem; /* Larger subtitle font */
-    color: #6c757d;
-    margin-bottom: 2.5rem; /* Increased margin for spacing */
-    white-space: nowrap;
-  }
-  
-  /* Input group styling */
-  .input-group {
-    position: relative;
-    margin-bottom: 2rem; /* Increased spacing between inputs */
-  }
-  
-  .login-input {
-    width: 100%;
-    padding: 1.2rem; /* Increased padding for larger input fields */
-    padding-right: 3rem; /* Adjusted padding for icon space */
-    border: 1px solid #ced4da;
-    border-radius: 6px; /* Slightly rounder corners */
-    font-size: 1.1rem; /* Larger font size for inputs */
-    outline: none;
-  }
-  
-  .login-input:focus {
-    border-color: #007bff; /* Blue color */
-    box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
-  }
-  
-  .input-icon {
-    position: absolute;
-    right: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #6c757d;
-    font-size: 1.5rem; /* Larger icon size */
-  }
-  
-  /* Password links styling */
-  .password-links {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 2.5rem; /* Increased margin for spacing */
-  }
-  
-  .link {
-    font-size: 1rem; /* Larger font for links */
-    color: #007bff; /* Blue color */
-    text-decoration: none;
-  }
-  
-  .link:hover {
-    text-decoration: underline;
-  }
-  
-  /* Submit button styling */
-  .submit-button {
-    display: flex; /* Use flexbox */
-    justify-content: center; /* Horizontally center the text */
-    align-items: center; /* Vertically center the text */
-    width: 100%;
-    padding: 1.2rem; /* Larger button */
-    background-color: #007bff; /* Blue color */
-    color: white;
-    font-size: 1.3rem; /* Larger font size for button text */
-    font-weight: bold;
-    border: none;
-    border-radius: 6px; /* Slightly rounder corners */
-    cursor: pointer;
-  }
-  
-  .submit-button:hover {
-    background-color: #0056b3; /* Darker blue */
-  }
-  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.login-box {
+  width: 400px;
+  padding: 30px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.login-title {
+  font-size: 24px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.welcome {
+  color: #2457d3;
+  font-weight: bold;
+}
+
+.login-subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.login-tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.login-tab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  color: #666;
+  transition: all 0.3s;
+}
+
+.login-tab.active {
+  color: #2457d3;
+  border-bottom: 2px solid #2457d3;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.login-input {
+  width: 100%;
+  padding: 12px 40px 12px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.input-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+}
+
+.password-links {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.link {
+  color: #2457d3;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #2457d3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+  background-color: #1a3da1;
+}
