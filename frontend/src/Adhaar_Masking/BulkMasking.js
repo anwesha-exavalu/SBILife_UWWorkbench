@@ -172,7 +172,7 @@ const BulkMasking = () => {
               {selectedFiles.map((file, index) => (
                 <li key={index}>
                   {file.name}
-                  <button
+                  <button className="cross-btn"
                     onClick={() => removeFile(index)}
                     style={{ marginLeft: '10px' }}
                   >

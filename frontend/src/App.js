@@ -15,6 +15,9 @@ import AuditTrail from './SidebarComponents/AuditTrail';
 import AccountInfo from './SidebarComponents/AccountInfo';
 import AccountDashboard from './SidebarComponents/AccountDashboard';
 import Login from './layout/Login';
+import UploadFile from './Adhaar_Masking/UploadFile';
+import BulkMasking from './Adhaar_Masking/BulkMasking';
+import NextScreen from './Adhaar_Masking/NextScreen';
 
 
 const { Sider, Content, Footer } = Layout;
@@ -244,9 +247,10 @@ const AppLayout = () => {
             <Route path="documentscreen" element={<DocumentScreen />} />
             <Route path="clearancescreen" element={<ClearanceScreen />} />
             <Route path="searchinsured" element={<SearchInsured />} />
-            <Route path="individualaadhaarmasking" element={<div>Individual Adhaar</div>} />
+            <Route path="individualaadhaarmasking" element={<UploadFile/>} />
             {/* <Route path="masking-settings" element={<MaskingSettings />} /> */}
-            <Route path="bulkaadhaarmasking" element={<div>Bulk Adhaar</div>} />
+            <Route path="bulkaadhaarmasking" element={<BulkMasking/>} />
+            <Route path="/secondScreen" element={<NextScreen />} />
           </Routes>
         </Content>
         {!isLoginPage && (

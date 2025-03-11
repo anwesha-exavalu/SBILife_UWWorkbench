@@ -1,15 +1,34 @@
 import React, { useState } from 'react';
 import { 
-  
   Upload, 
   message, 
   Alert,
- 
 } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
-import '../Bulkmasking/BulkMasking.css';
+import './BulkMasking.css';
 import styled from 'styled-components';
+
+const MethodContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  background: white;
+  max-width: 500px;
+  width: 100%;
+  transition: all 0.3s;
+  
+  &.selected {
+    border: 2px solid #1677FF;
+    background: #f0f7ff;
+  }
+`;
+
 const UploadFile = () => {
   const [fileList, setFileList] = useState([]);
   const [imageUrl, setImageUrl] = useState(null);
@@ -26,27 +45,6 @@ const UploadFile = () => {
     }
     return false;
   };
-  const MethodContainer = styled.div`
-  
-  // border: 1px solid #f0f0f0;
-   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 40px;
- 
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  margin-bottom: 1rem;
-  transition: all 0.3s;
-  // &:hover {
-  //   background: #fafafa;
-  // }
-  &.selected {
-    border-color: #ff8d2f;
-    background: #e6f7ff;
-  }
-`;
 
   const handleFileChange = async (info) => {
     const { fileList: newFileList, file } = info;
@@ -95,11 +93,11 @@ const UploadFile = () => {
   };
 
   return (
-    // <div className="container" style={{justifyContent: 'center', padding: '30px 50px'}}>
+    <div className="container" style={{ justifyContent: 'center', padding: '40px' }}>
       <MethodContainer>
-        <h2 className="title">Upload Your Adhaar Card</h2>
+        <h2 className="title">Upload Your Aadhaar Card</h2>
         <div className="upload-box">
-          <p className="file-inside">Select or drop your file here in .jpg or .jpeg or .png format </p>
+          <p className="file-inside">Select or drop your file here (.jpg, .jpeg, .png)</p>
           <Upload
             accept=".jpg,.jpeg,.png"
             beforeUpload={beforeUpload}
@@ -108,12 +106,11 @@ const UploadFile = () => {
             maxCount={1}
           >
             <button
-             
               type='default'
               className="button"
-            //  style={{backgroundColor: '#f16608', transform: 'scale(1.05)'}}
+              color='#1677FF' 
             >
-             <UploadOutlined /> Click to Upload Image
+             <UploadOutlined /> 
             </button>
           </Upload>
         </div>
@@ -123,22 +120,20 @@ const UploadFile = () => {
             message="File selected successfully"
             type="success"
             showIcon
-            style={{ marginTop: '15px' }}
+            style={{ marginTop: '16px', width: '100%' }}
           />
         )}
         
         <button
-          className="button"
+          className="continue-button"
           onClick={handleNext}
           disabled={!fileList.length || !imageUrl}
-          style={{ marginTop: '20px' }}
+          style={{ marginTop: '24px', width: '100%' }}
         >
-          Next
+          Continue to Next Step
         </button>
-        </MethodContainer>
-
-      
-    
+      </MethodContainer>
+    </div>
   );
 };
 
