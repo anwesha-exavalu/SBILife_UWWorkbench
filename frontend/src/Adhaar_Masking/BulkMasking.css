@@ -1,0 +1,130 @@
+.container {
+  display: flex;
+  width: 70%;
+  height: 100%;
+  background-color: #f4f4f4;
+  gap: 12px;
+  margin-left: 15%;
+}
+
+.section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  background: white;
+  transition: all 0.3s ease-in-out;
+}
+
+.input-section {
+  background: linear-gradient(135deg, #fffbf6, white);
+  border-radius: 8px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.title {
+  color: #002d5e;
+}
+
+.file-inside {
+  font-size: larger;
+  color: #002d5e;
+}
+
+.output-section {
+  background: linear-gradient(135deg, #ffffff,#fffbf6);
+  border-radius: 8px;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.upload-box {
+  border: 2px dashed #ffb36d;
+  padding: 35px;
+  margin-bottom: 15px;
+  text-align: center;
+  background: white;
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+  
+}
+
+.button {
+  background-color: #ff8d2f;
+  color: white;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.button:hover {
+  background-color: #f16608;
+  transform: scale(1.05);
+}
+
+.masking-button {
+  background-color: #ff8d2f;
+  color: white;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.error-message {
+  color: red;
+  margin: 10px 0;
+}
+
+.results {
+  margin-top: 20px;
+}
+
+.output-path {
+  margin-top: 10px;
+}
+
+.results-container {
+  width: 100%;
+  margin-top: 20px;
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.results-container h3 {
+  color: #002d5e;
+  margin-bottom: 16px;
+}
+
+.results-container ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.results-container li {
+  margin-bottom: 8px;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+  width: 100%;
+}
