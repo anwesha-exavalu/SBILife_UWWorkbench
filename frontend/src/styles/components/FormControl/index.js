@@ -9,6 +9,8 @@ export const FormDatePickerBox = styled.div`
     padding: 0px 6px;
     white-space: normal;
     text-align: left;
+    display: block; /* Make label a block element */
+    margin-bottom: 8px; /* Add space between label and input */
   }
 
   .ant-picker-outlined {
@@ -29,6 +31,23 @@ export const FormDatePickerBox = styled.div`
     line-height: 19.5px;
     color: #adacb0 !important;
     font-family: "Inter", sans-serif;
+  }
+  
+  /* Force Form Item to display in column direction */
+  .ant-form-item {
+    flex-direction: column !important;
+    display: flex !important;
+  }
+  
+  /* Make sure label takes full width */
+  .ant-form-item-label {
+    text-align: left;
+    width: 100% !important;
+  }
+  
+  /* Ensure control is full width */
+  .ant-form-item-control {
+    width: 100% !important;
   }
 `;
 
@@ -66,6 +85,23 @@ export const RadioBtnBox = styled.div`
     color: #adacb0;
     font-family: "Inter", sans-serif;
   }
+  
+  /* Force Form Item to display in column direction */
+  .ant-form-item {
+    flex-direction: column !important;
+    display: flex !important;
+  }
+  
+  /* Make sure label takes full width */
+  .ant-form-item-label {
+    text-align: left;
+    width: 100% !important;
+  }
+  
+  /* Ensure control is full width */
+  .ant-form-item-control {
+    width: 100% !important;
+  }
 `;
 
 export const FormInputFeild = styled.div`
@@ -77,6 +113,8 @@ export const FormInputFeild = styled.div`
     white-space: normal;
     text-align: left;
     padding: 0px 6px;
+    display: block; /* Make label a block element */
+    margin-bottom: 8px; /* Add space between label and input */
   }
 
   input {
@@ -106,6 +144,23 @@ export const FormInputFeild = styled.div`
   .suffix {
     margin-left: 10px;
     cursor: pointer;
+  }
+  
+  /* Force Form Item to display in column direction */
+  .ant-form-item {
+    flex-direction: column !important;
+    display: flex !important;
+  }
+  
+  /* Make sure label takes full width */
+  .ant-form-item-label {
+    text-align: left;
+    width: 100% !important;
+  }
+  
+  /* Ensure control is full width */
+  .ant-form-item-control {
+    width: 100% !important;
   }
 `;
 
@@ -139,7 +194,6 @@ export const FormSelect = styled.div`
   }
   .ant-select-selector {
     height: 43px !important; /* Adjust height */
-
     box-shadow: 0px 1.5px 4px -1px #9c9c9f;
   }
 
@@ -151,8 +205,28 @@ export const FormSelect = styled.div`
     color: #adacb0 !important;
     font-family: "Inter", sans-serif;
     white-space: normal;
+    display: block; /* Make label a block element */
+    margin-bottom: 8px; /* Add space between label and input */
+  }
+  
+  /* Force Form Item to display in column direction */
+  .ant-form-item {
+    flex-direction: column !important;
+    display: flex !important;
+  }
+  
+  /* Make sure label takes full width */
+  .ant-form-item-label {
+    text-align: left;
+    width: 100% !important;
+  }
+  
+  /* Ensure control is full width */
+  .ant-form-item-control {
+    width: 100% !important;
   }
 `;
+
 export const FormphonenumberFeild = styled.div`
   label::after {
     visibility: hidden;
@@ -162,6 +236,8 @@ export const FormphonenumberFeild = styled.div`
     white-space: normal;
     text-align: left;
     padding: 0px 6px;
+    display: block; /* Make label a block element */
+    margin-bottom: 8px; /* Add space between label and input */
   }
 
   input {
@@ -188,11 +264,31 @@ export const FormphonenumberFeild = styled.div`
     color: #adacb0 !important;
     font-family: "Inter", sans-serif;
   }
+  
+  /* Force Form Item to display in column direction */
+  .ant-form-item {
+    flex-direction: column !important;
+    display: flex !important;
+  }
+  
+  /* Make sure label takes full width */
+  .ant-form-item-label {
+    text-align: left;
+    width: 100% !important;
+  }
+  
+  /* Ensure control is full width */
+  .ant-form-item-control {
+    width: 100% !important;
+  }
 `;
+
 export const FormCheckBoxStyled = styled.div`
   width: 100%;
   .ant-form-item {
     width: 100%;
+    flex-direction: column !important;
+    display: flex !important;
   }
   .ant-checkbox-group {
     width: 100%;
@@ -206,5 +302,16 @@ export const FormCheckBoxStyled = styled.div`
   .ant-checkbox-checked.ant-checkbox-disabled > .ant-checkbox-inner {
     background: #1677ff;
     border-color: #1677ff;
+  }
+  
+  /* Make sure label takes full width */
+  .ant-form-item-label {
+    text-align: left;
+    width: 100% !important;
+  }
+  
+  /* Ensure control is full width */
+  .ant-form-item-control {
+    width: 100% !important;
   }
 `;
