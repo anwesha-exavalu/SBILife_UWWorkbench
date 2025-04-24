@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Avatar, Descriptions, Row, Col, Typography } from 'antd';
-import { UserOutlined, BookOutlined, DollarOutlined, CalendarOutlined, TeamOutlined, ToolOutlined } from '@ant-design/icons';
+import { UserOutlined, BookOutlined, DollarOutlined, CalendarOutlined, TeamOutlined, ToolOutlined,IdcardOutlined } from '@ant-design/icons';
 
 const { Title, Text } = Typography;
 
@@ -110,6 +110,25 @@ const ProposerInfoCard = ({ proposerData }) => {
               span={2}
             >
               {proposerData.annualIncome || 'N/A'}
+            </Descriptions.Item>
+
+            <Descriptions.Item 
+              label={<Text strong><IdcardOutlined /> Customer ID</Text>} 
+              span={2}
+            >
+              {proposerData.customerID || 'N/A'}
+            </Descriptions.Item>
+            <Descriptions.Item 
+              label={<Text strong><IdcardOutlined />Company Name</Text>} 
+              span={2}
+            >
+              {proposerData.companyName || 'N/A'}
+            </Descriptions.Item>
+            <Descriptions.Item 
+              label={<Text strong><IdcardOutlined /> PAN Number</Text>} 
+              span={2}
+            >
+              {proposerData.panNumber || 'N/A'}
             </Descriptions.Item>
           </Descriptions>
         </Col>

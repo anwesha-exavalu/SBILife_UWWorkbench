@@ -23,7 +23,7 @@ def extract_data_from_gemini_vision(pdf_path, submission_id):
 
         # Construct API request payload using Content and Part
         parts = [Part({
-            "text": "Extract all information from the document in proper JSON format"
+            "text": "Extract FY,Gross Salary,Employee Name,Company Name,Insurance Deductions from the document in proper JSON format"
         })]
         for img_base64 in images:
             parts.append(Part(inline_data={"mime_type": "image/png", "data": img_base64.split(",")[
