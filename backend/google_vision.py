@@ -11,7 +11,7 @@ load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")  # Make sure to set GEMINI_API_KEY
 
 
-def extract_data_from_gemini_vision(pdf_path, submission_id):
+def extract_data_from_gemini_vision(pdf_path, submission_id,prompt):
     """Extract structured data from a PDF using the Gemini API (Gemini SDK directly)."""
 
     try:
@@ -23,7 +23,7 @@ def extract_data_from_gemini_vision(pdf_path, submission_id):
 
         # Construct API request payload using Content and Part
         parts = [Part({
-            "text": "Extract FY,Gross Salary,Employee Name,Company Name,Insurance Deductions from the document in proper JSON format"
+            "text": prompt
         })]
         for img_base64 in images:
             parts.append(Part(inline_data={"mime_type": "image/png", "data": img_base64.split(",")[

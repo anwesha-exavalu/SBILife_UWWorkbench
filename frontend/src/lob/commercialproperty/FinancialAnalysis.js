@@ -73,24 +73,24 @@ const FinancialAnalysis = () => {
   // Calculate age based on DOB
   const calculateAge = (dob) => {
     if (!dob) return 0;
-    
+
     const dobParts = dob.split('/');
     if (dobParts.length !== 3) return 0;
-    
+
     const birthDate = new Date(
-      parseInt(dobParts[2]), 
-      parseInt(dobParts[1]) - 1, 
+      parseInt(dobParts[2]),
+      parseInt(dobParts[1]) - 1,
       parseInt(dobParts[0])
     );
-    
+
     const today = new Date();
     let age = today.getFullYear() - birthDate.getFullYear();
     const m = today.getMonth() - birthDate.getMonth();
-    
+
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
-    
+
     return age;
   };
 
@@ -172,9 +172,9 @@ const FinancialAnalysis = () => {
     {
       key: '1',
       document: 'Salary Slips (Gross)',
-      jan: 0,
-      feb: 0,
-      mar: 0,
+      jan: 5234,
+      feb: 5236,
+      mar: 7656,
       annual: 0,
       samf: 0,
       saEligibility: '',
@@ -264,10 +264,10 @@ const FinancialAnalysis = () => {
   // Check if document data matches with proposal data
   const checkDataMatching = (apiResponse) => {
     if (!apiResponse?.response) return;
-    
+
     const response = apiResponse.response;
     const newMatchingResults = { ...matchingResults };
-    
+
     // Check Company Name
     if (response["Company Name"]) {
       newMatchingResults.companyName = {
@@ -275,7 +275,7 @@ const FinancialAnalysis = () => {
         matched: response["Company Name"].includes(sampleProposerData.companyName)
       };
     }
-    
+
     // Check Employee Name
     if (response["Employee Name"]) {
       const fullName = `${sampleProposerData.firstName} ${sampleProposerData.middleName} ${sampleProposerData.lastName}`.trim();
@@ -284,7 +284,7 @@ const FinancialAnalysis = () => {
         matched: response["Employee Name"].includes(fullName) || fullName.includes(response["Employee Name"])
       };
     }
-    
+
     // Check PAN Number
     if (response["PAN Number"]) {
       newMatchingResults.panNumber = {
@@ -292,23 +292,23 @@ const FinancialAnalysis = () => {
         matched: response["PAN Number"] === sampleProposerData.panNumber
       };
     }
-    
+
     // Check Gross Salary
     if (response["Gross Salary"]) {
       const documentGrossSalary = parseFloat(response["Gross Salary"]);
       const proposalGrossSalary = parseFloat(sampleProposerData.annualIncome.replace(/,/g, ''));
-      
+
       // Consider a match if they are within 10% of each other
       const tolerance = 0.1; // 10%
       const difference = Math.abs(documentGrossSalary - proposalGrossSalary);
       const percentDifference = difference / proposalGrossSalary;
-      
+
       newMatchingResults.grossSalary = {
         checked: true,
         matched: percentDifference <= tolerance
       };
     }
-    
+
     // Check Insurance Deductions if available
     if (response["Insurance Premium Deductions"]) {
       // For demo purposes, we'll just mark it as checked but not matched
@@ -317,252 +317,279 @@ const FinancialAnalysis = () => {
         matched: false // In a real app, you would compare with actual insurance data
       };
     }
-    
+
     setMatchingResults(newMatchingResults);
   };
 
   // Function to parse the API response and update table data
-  const updateTableWithApiData = (apiResponse) => {
-    // Store API response for reference
-    setApiResponseData(apiResponse);
+ // Update the updateTableWithApiData function to handle bank statement data
+const updateTableWithApiData = (apiResponse) => {
+  // Store API response for reference
+  setApiResponseData(apiResponse);
+  
+  // Check if document data matches with proposal data
+  checkDataMatching(apiResponse);
+  
+  // Calculate proposer's age based on DOB
+  const age = calculateAge(sampleProposerData.dob);
+  const samf = calculateSAMF(age);
+  
+  if (selectedDocType === 'form16' || selectedDocType === 'itr') {
+    // Create a new array based on default structure
+    const updatedData = [...defaultForm16Data];
     
-    // Check if document data matches with proposal data
-    checkDataMatching(apiResponse);
-    
-    // Calculate proposer's age based on DOB
-    const age = calculateAge(sampleProposerData.dob);
-    const samf = calculateSAMF(age);
-    
-    if (selectedDocType === 'form16' || selectedDocType === 'itr') {
-      // Create a new array based on default structure
-      const updatedData = [...defaultForm16Data];
-      
-      // Initialize values
-      let fy1920 = 0;
-      let fy2122 = 0;
-      let fy2223 = 0;
-      
-      // Check if we have response data and map it to the correct fiscal year
-      if (apiResponse?.response) {
-        const grossSalary = parseFloat(apiResponse.response["Gross Salary"] || 0);
-        const fiscalYear = apiResponse.response["FY"] || "";
-        
-        // Map the gross salary to the corresponding fiscal year column
-        if (fiscalYear === "2019-20") {
-          fy1920 = grossSalary;
-        } else if (fiscalYear === "2021-22") {
-          fy2122 = grossSalary;
-        } else if (fiscalYear === "2022-23") {
-          fy2223 = grossSalary;
-        }
-      }
-      
-      // For this example, let's assume we have some previous data for other fiscal years
-      // In a real application, you would maintain this state or get it from another API
-      if (fy1920 === 0) fy1920 = 720000; // Example value if not provided
-      if (fy2122 === 0) fy2122 = 735000; // Example value if not provided
-      if (fy2223 === 0) fy2223 = 756000; // Example value if not provided
-      
-      // Calculate 3-year average
-      const average = Math.round((fy1920 + fy2122 + fy2223) / 3);
-      
-      // Calculate SA Eligibility (Average Income * SAMF)
-      const saEligibility = typeof samf === 'number' ? Math.round(average * samf) : 0;
-      
-      // Update the first row with calculated data
-      updatedData[0] = {
-        ...updatedData[0],
-        fy1920,
-        fy2122,
-        fy2223,
-        average,
-        samf,
-        saEligibility,
-      };
-      
-      // Set existing insurance values from API or use defaults
-      const iibInsurance = 5500000; // Default or from API
-      const kotakInsurance = 500000; // Default or from API
-      const totalExistingInsurance = iibInsurance + kotakInsurance;
-      
-      // Update existing insurance rows
-      updatedData[1] = {
-        ...updatedData[1],
-        saEligibility: iibInsurance,
-      };
-      
-      updatedData[2] = {
-        ...updatedData[2],
-        saEligibility: kotakInsurance,
-      };
-      
-      updatedData[3] = {
-        ...updatedData[3],
-        saEligibility: totalExistingInsurance,
-      };
-      
-      // Calculate eligible cover for this policy
-      const eligibleCover = Math.max(0, saEligibility - totalExistingInsurance);
-      updatedData[4] = {
-        ...updatedData[4],
-        saEligibility: eligibleCover,
-      };
-      
-      // Set coverage applied in this policy (from API or default)
-      const coverageApplied = 8000000; // Default or from API
-      updatedData[5] = {
-        ...updatedData[5],
-        saEligibility: coverageApplied,
-      };
-      
-      // Calculate over/under insured
-      const overUnderInsured = eligibleCover - coverageApplied;
-      updatedData[6] = {
-        ...updatedData[6],
-        saEligibility: overUnderInsured,
-      };
-      
-      setTableData(updatedData);
-    } else if (selectedDocType === 'salary' || selectedDocType === 'bankaccount') {
-      // Handle salary/bank statement data
-      const updatedData = [...defaultSalaryData];
-      
-      // For this example, we'll use mock data
-      const jan = 63000;
-      const feb = 63000;
-      const mar = 63000;
-      
-      // Calculate annual income (monthly * 12)
-      const avgMonthly = (jan + feb + mar) / 3;
-      const annual = Math.round(avgMonthly * 12);
-      
-      // Calculate SA Eligibility
-      const saEligibility = typeof samf === 'number' ? Math.round(annual * samf) : 0;
-      
-      // Update salary slips (gross) row
-      updatedData[0] = {
-        ...updatedData[0],
-        jan,
-        feb,
-        mar,
-        annual,
-        samf,
-        saEligibility,
-      };
-      
-      // Set existing insurance values
-      const iibInsurance = 5500000;
-      const kotakInsurance = 500000;
-      const totalExistingInsurance = iibInsurance + kotakInsurance;
-      
-      // Update existing insurance rows
-      updatedData[3] = {
-        ...updatedData[3],
-        saEligibility: iibInsurance,
-      };
-      
-      updatedData[4] = {
-        ...updatedData[4],
-        saEligibility: kotakInsurance,
-      };
-      
-      updatedData[5] = {
-        ...updatedData[5],
-        saEligibility: totalExistingInsurance,
-      };
-      
-      // Calculate eligible cover for this policy
-      const eligibleCover = Math.max(0, saEligibility - totalExistingInsurance);
-      updatedData[6] = {
-        ...updatedData[6],
-        saEligibility: eligibleCover,
-      };
-      
-      // Set coverage applied in this policy
-      const coverageApplied = 8000000;
-      updatedData[7] = {
-        ...updatedData[7],
-        saEligibility: coverageApplied,
-      };
-      
-      // Calculate over/under insured
-      const overUnderInsured = eligibleCover - coverageApplied;
-      updatedData[8] = {
-        ...updatedData[8],
-        saEligibility: overUnderInsured,
-      };
-      
-      setTableData(updatedData);
-    }
-  };
+    // Initialize values
+    let fy1920 = 0;
+    let fy2122 = 0;
+    let fy2223 = 0;
 
-  // Custom request handler for file upload
-  const customUploadRequest = async ({ file, onSuccess, onError }) => {
-    if (selectedDocType === 'form16') {
-      setLoading(true);
+
+    
+    // Check if we have response data and map it to the correct fiscal year
+    if (apiResponse?.response) {
+      const grossSalary = parseFloat(apiResponse.response["Gross Salary"] || 0);
+      const fiscalYear = apiResponse.response["FY"] || "";
       
-      const formData = new FormData();
-      formData.append('file', file);
-      
+      // Map the gross salary to the corresponding fiscal year column
+      if (fiscalYear === "2019-20") {
+        fy1920 = grossSalary;
+      } else if (fiscalYear === "2021-22") {
+        fy2122 = grossSalary;
+      } else if (fiscalYear === "2022-23") {
+        fy2223 = grossSalary;
+      }
+    }
+    
+    // For this example, let's assume we have some previous data for other fiscal years
+    // In a real application, you would maintain this state or get it from another API
+    if (fy1920 === 0) fy1920 = 720000; // Example value if not provided
+    if (fy2122 === 0) fy2122 = 735000; // Example value if not provided
+    if (fy2223 === 0) fy2223 = 756000; // Example value if not provided
+    
+    // Calculate 3-year average
+    const average = Math.round((fy1920 + fy2122 + fy2223) / 3);
+    
+    // Calculate SA Eligibility (Average Income * SAMF)
+    const saEligibility = typeof samf === 'number' ? Math.round(average * samf) : 0;
+    
+    // Update the first row with calculated data
+    updatedData[0] = {
+      ...updatedData[0],
+      fy1920,
+      fy2122,
+      fy2223,
+      average,
+      samf,
+      saEligibility,
+    };
+    
+    // Set existing insurance values from API or use defaults
+    const iibInsurance = 5500000; // Default or from API
+    const kotakInsurance = 500000; // Default or from API
+    const totalExistingInsurance = iibInsurance + kotakInsurance;
+    
+    // Update existing insurance rows
+    updatedData[1] = {
+      ...updatedData[1],
+      saEligibility: iibInsurance,
+    };
+    
+    updatedData[2] = {
+      ...updatedData[2],
+      saEligibility: kotakInsurance,
+    };
+    
+    updatedData[3] = {
+      ...updatedData[3],
+      saEligibility: totalExistingInsurance,
+    };
+    
+    // Calculate eligible cover for this policy
+    const eligibleCover = Math.max(0, saEligibility - totalExistingInsurance);
+    updatedData[4] = {
+      ...updatedData[4],
+      saEligibility: eligibleCover,
+    };
+    
+    // Set coverage applied in this policy (from API or default)
+    const coverageApplied = 8000000; // Default or from API
+    updatedData[5] = {
+      ...updatedData[5],
+      saEligibility: coverageApplied,
+    };
+    
+    // Calculate over/under insured
+    const overUnderInsured = eligibleCover - coverageApplied;
+    updatedData[6] = {
+      ...updatedData[6],
+      saEligibility: overUnderInsured,
+    };
+    
+    setTableData(updatedData);
+  } else if (selectedDocType === 'salary' || selectedDocType === 'bankaccount') {
+    // Handle salary/bank statement data
+    const updatedData = [...defaultSalaryData];
+    
+    // Get monthly values from API response or use defaults
+    let jan = 0;
+    let feb = 0;
+    let mar = 0;
+
+    console.log("Api response: ", apiResponse);
+    
+    if (apiResponse?.response) {
+      // Try to parse values from the API response
       try {
-        // Call the API endpoint with the file
-        const response = await axios.post('http://127.0.0.1:8000/extract_data/', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
+        // The response is a string containing JSON data
+        // Extract and parse the JSON string from the response
+        let dataArray = [];
         
-        // Handle successful response
-        if (response.data) {
-          updateTableWithApiData(response.data);
-          onSuccess('ok');
-          setIncomeDocUploaded(true);
-          message.success(`${file.name} processed successfully`);
-        } else {
-          onError('Failed to process the file');
-          message.error('Failed to extract data from file');
+        if (typeof apiResponse.response === 'string') {
+          // Extract JSON array from the response string
+          const jsonMatch = apiResponse.response.match(/```json\n([\s\S]*?)\n```/);
+          if (jsonMatch && jsonMatch[1]) {
+            dataArray = JSON.parse(jsonMatch[1]);
+          }
+        } else if (Array.isArray(apiResponse.response)) {
+          dataArray = apiResponse.response;
+        }
+        
+        // Map the data to the corresponding months
+        if (dataArray.length >= 1) {
+          // Apr 8 maps to January
+          jan = parseFloat(dataArray[0].balance.replace(/,/g, '') || "0");
+        }
+        if (dataArray.length >= 2) {
+          // Apr 10 maps to February
+          feb = parseFloat(dataArray[1].balance.replace(/,/g, '') || "0");
+        }
+        if (dataArray.length >= 3) {
+          // Apr 12 maps to March
+          mar = parseFloat(dataArray[2].balance.replace(/,/g, '') || "0");
         }
       } catch (error) {
-        console.error('Error uploading file:', error);
-        onError('Failed to upload file');
-        message.error(`${file.name} upload failed: ${error.message}`);
-      } finally {
-        setLoading(false);
+        console.error("Error parsing monthly values:", error);
+        // Use default values if parsing fails
+        jan = selectedDocType === 'salary' ? 63000 : 5234;
+        feb = selectedDocType === 'salary' ? 63000 : 5236;
+        mar = selectedDocType === 'salary' ? 63000 : 7656;
       }
     } else {
-      // For other document types, we can implement similar logic or use mock data
-      setTimeout(() => {
-        // Use mock data for now
-        if (selectedDocType === 'itr') {
-          // Simulate API response
-          const mockApiResponse = {
-            "response": {
-              "Gross Salary": "735000.00",
-              "FY": "2021-22",
-              "Employee Name": "Abhishek Kumar Singh",
-              "PAN Number": "XXXXXXXXXX",
-              "Company Name": "Quality House August Kranti Marg"
-            }
-          };
-          updateTableWithApiData(mockApiResponse);
-        } else if (selectedDocType === 'salary') {
-          updateTableWithApiData({
-            jan: 63000,
-            feb: 63000,
-            mar: 63000
-          });
-        } else if (selectedDocType === 'bankaccount') {
-          updateTableWithApiData({
-            jan: 55000,
-            feb: 55000,
-            mar: 49000
-          });
-        }
-        
+      // Use default values if API doesn't return valid data
+      jan = selectedDocType === 'salary' ? 63000 : 5234;
+      feb = selectedDocType === 'salary' ? 63000 : 5236;
+      mar = selectedDocType === 'salary' ? 63000 : 7656;
+    }
+    
+    // Calculate annual income (monthly * 12)
+    const avgMonthly = (jan + feb + mar) / 3;
+    const annual = Math.round(avgMonthly * 12);
+    
+    // Calculate SA Eligibility
+    const saEligibility = typeof samf === 'number' ? Math.round(annual * samf) : 0;
+    
+    // Update salary slips (gross) row
+    updatedData[0] = {
+      ...updatedData[0],
+      jan,
+      feb,
+      mar,
+      annual,
+      samf,
+      saEligibility,
+    };
+    
+    // Set existing insurance values
+    const iibInsurance = 5500000;
+    const kotakInsurance = 500000;
+    const totalExistingInsurance = iibInsurance + kotakInsurance;
+    
+    // Update existing insurance rows
+    updatedData[3] = {
+      ...updatedData[3],
+      saEligibility: iibInsurance,
+    };
+    
+    updatedData[4] = {
+      ...updatedData[4],
+      saEligibility: kotakInsurance,
+    };
+    
+    updatedData[5] = {
+      ...updatedData[5],
+      saEligibility: totalExistingInsurance,
+    };
+    
+    // Calculate eligible cover for this policy
+    const eligibleCover = Math.max(0, saEligibility - totalExistingInsurance);
+    updatedData[6] = {
+      ...updatedData[6],
+      saEligibility: eligibleCover,
+    };
+    
+    // Set coverage applied in this policy
+    const coverageApplied = 8000000;
+    updatedData[7] = {
+      ...updatedData[7],
+      saEligibility: coverageApplied,
+    };
+    
+    // Calculate over/under insured
+    const overUnderInsured = eligibleCover - coverageApplied;
+    updatedData[8] = {
+      ...updatedData[8],
+      saEligibility: overUnderInsured,
+    };
+    
+    setTableData(updatedData);
+  }
+};
+  // Custom request handler for file upload
+  const customUploadRequest = async ({ file, onSuccess, onError }) => {
+    setLoading(true);
+  
+    const formData = new FormData();
+    formData.append('file', file);
+  
+    // Set API endpoint based on document type
+    let apiEndpoint = '';
+    if (selectedDocType === 'form16') {
+      apiEndpoint = 'http://127.0.0.1:8000/extract_data/form16';
+    } else if (selectedDocType === 'bankaccount') {
+      apiEndpoint = 'http://127.0.0.1:8000/extract_data/bankstatement';
+    } else if (selectedDocType === 'itr') {
+      apiEndpoint = 'http://127.0.0.1:8000/extract_data/itr';
+    } else if (selectedDocType === 'salary') {
+      apiEndpoint = 'http://127.0.0.1:8000/extract_data/salary';
+    } else {
+      apiEndpoint = 'http://127.0.0.1:8000/extract_data/';
+    }
+  
+    try {
+      // Only form16 was going through the API path, now all document types will
+      const response = await axios.post(apiEndpoint, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+  
+      // Handle successful response
+      if (response.data) {
+        console.log(response.data);
+        updateTableWithApiData(response.data);
         onSuccess('ok');
         setIncomeDocUploaded(true);
-        message.success(`${file.name} uploaded successfully`);
-      }, 500);
+        message.success(`${file.name} processed successfully`);
+      } else {
+        onError('Failed to process the file');
+        message.error('Failed to extract data from file');
+      }
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      onError('Failed to upload file');
+      message.error(`${file.name} upload failed: ${error.message}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -575,7 +602,7 @@ const FinancialAnalysis = () => {
   // Render matching status icon
   const renderMatchingStatus = (field) => {
     const result = matchingResults[field];
-    
+
     if (!result.checked) {
       return <span style={{ color: '#999' }}>-</span>;
     } else if (result.matched) {
@@ -626,25 +653,25 @@ const FinancialAnalysis = () => {
     if (incomeDocUploaded) {
       if (selectedDocType === 'form16' || selectedDocType === 'itr') {
         return (
-          <Card 
+          <Card
             title={
               <div>
                 <Title level={4}>Annual Income-Based Financial Underwriting</Title>
                 {apiResponseData?.response && (
                   <div style={{ fontSize: '14px', marginTop: '8px' }}>
                     <p>
-                      <strong>Company:</strong> {apiResponseData.response["Company Name"] || 'N/A'} | 
-                      <strong> Employee:</strong> {apiResponseData.response["Employee Name"] || 'N/A'} | 
+                      <strong>Company:</strong> {apiResponseData.response["Company Name"] || 'N/A'} |
+                      <strong> Employee:</strong> {apiResponseData.response["Employee Name"] || 'N/A'} |
                       <strong> PAN:</strong> {apiResponseData.response["PAN Number"] || 'N/A'}
                     </p>
                   </div>
                 )}
               </div>
-            } 
-            bordered={true} 
+            }
+            bordered={true}
             style={{ marginBottom: '20px' }}
           >
-            <Table 
+            <Table
               columns={form16ItrColumns.map(col => {
                 if (['fy1920', 'fy2122', 'fy2223', 'average', 'saEligibility'].includes(col.dataIndex)) {
                   return {
@@ -654,7 +681,7 @@ const FinancialAnalysis = () => {
                 }
                 return col;
               })}
-              dataSource={tableData} 
+              dataSource={tableData}
               pagination={false}
               bordered
               size="middle"
@@ -664,12 +691,12 @@ const FinancialAnalysis = () => {
         );
       } else if (selectedDocType === 'salary' || selectedDocType === 'bankaccount') {
         return (
-          <Card 
-            title={<Title level={4}>Monthly Income-Based Financial Underwriting</Title>} 
-            bordered={true} 
+          <Card
+            title={<Title level={4}>Monthly Income-Based Financial Underwriting</Title>}
+            bordered={true}
             style={{ marginBottom: '20px' }}
           >
-            <Table 
+            <Table
               columns={salarySlipColumns.map(col => {
                 if (['jan', 'feb', 'mar', 'annual', 'saEligibility'].includes(col.dataIndex)) {
                   return {
@@ -679,7 +706,7 @@ const FinancialAnalysis = () => {
                 }
                 return col;
               })}
-              dataSource={tableData} 
+              dataSource={tableData}
               pagination={false}
               bordered
               size="middle"
@@ -693,7 +720,7 @@ const FinancialAnalysis = () => {
   };
 
   return (
-    <div style={{ 
+    <div style={{
       flexDirection: 'column',
       width: '100%',
       justifyContent: 'center',
@@ -738,13 +765,13 @@ const FinancialAnalysis = () => {
                 </Select>
               </Col>
               <Col xs={8} sm={6}>
-                <Upload 
+                <Upload
                   customRequest={customUploadRequest}
                   multiple
                   showUploadList={true}
                 >
-                  <Button 
-                    icon={<UploadOutlined />} 
+                  <Button
+                    icon={<UploadOutlined />}
                     disabled={!selectedDocType}
                     loading={loading}
                     title={selectedDocType ? `Upload ${selectedDocType}` : "Select document type first"}
@@ -756,12 +783,12 @@ const FinancialAnalysis = () => {
             </Row>
           </Card>
         </Col>
-        
+
         {/* Matching Section - only show after form16 document is uploaded */}
         <Col xs={24} md={12}>
           <Card title="Document Matching Status" bordered={true}>
             {incomeDocUploaded && (selectedDocType === 'form16' || selectedDocType === 'itr') ? (
-              <Table 
+              <Table
                 size="small"
                 pagination={false}
                 showHeader={false}
@@ -770,9 +797,9 @@ const FinancialAnalysis = () => {
                 columns={[
                   { title: 'Field', dataIndex: 'field', key: 'field', width: '25%' },
                   { title: 'Requirement', dataIndex: 'requirement', key: 'requirement', width: '65%' },
-                  { 
-                    title: 'Status', 
-                    dataIndex: 'status', 
+                  {
+                    title: 'Status',
+                    dataIndex: 'status',
                     key: 'status',
                     width: '10%',
                     align: 'center'
@@ -781,8 +808,8 @@ const FinancialAnalysis = () => {
               />
             ) : (
               <div style={{ textAlign: 'center', padding: '20px 0' }}>
-                {selectedDocType === 'form16' || selectedDocType === 'itr' ? 
-                  'Upload a Form 16 or ITR document to view matching status' : 
+                {selectedDocType === 'form16' || selectedDocType === 'itr' ?
+                  'Upload a Form 16 or ITR document to view matching status' :
                   'Select and upload Form 16 or ITR document to view matching status'}
               </div>
             )}
