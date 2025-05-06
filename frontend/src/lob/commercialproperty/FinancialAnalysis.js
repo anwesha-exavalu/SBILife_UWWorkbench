@@ -482,8 +482,10 @@ const updateTableWithApiData = (apiResponse) => {
     }
     
     // Calculate annual income (monthly * 12)
+
     const avgMonthly = (jan + feb + mar) / 3;
-    const annual = Math.round(avgMonthly * 12);
+    console.log("avg",avgMonthly)
+    const annual = Math.round(avgMonthly);
     
     // Calculate SA Eligibility
     const saEligibility = typeof samf === 'number' ? Math.round(annual * samf) : 0;
@@ -521,7 +523,7 @@ const updateTableWithApiData = (apiResponse) => {
     };
     
     // Calculate eligible cover for this policy
-    const eligibleCover = Math.max(0, saEligibility - totalExistingInsurance);
+    const eligibleCover = saEligibility - totalExistingInsurance;
     updatedData[6] = {
       ...updatedData[6],
       saEligibility: eligibleCover,
