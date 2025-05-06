@@ -384,7 +384,7 @@ const updateTableWithApiData = (apiResponse) => {
     };
     
     // Set existing insurance values from API or use defaults
-    const iibInsurance = 5500000; // Default or from API
+    const iibInsurance = 2000000; // Default or from API
     const kotakInsurance = 500000; // Default or from API
     const totalExistingInsurance = iibInsurance + kotakInsurance;
     
@@ -405,14 +405,14 @@ const updateTableWithApiData = (apiResponse) => {
     };
     
     // Calculate eligible cover for this policy
-    const eligibleCover = Math.max(0, saEligibility - totalExistingInsurance);
+    const eligibleCover = saEligibility - totalExistingInsurance;
     updatedData[4] = {
       ...updatedData[4],
       saEligibility: eligibleCover,
     };
     
     // Set coverage applied in this policy (from API or default)
-    const coverageApplied = 8000000; // Default or from API
+    const coverageApplied = 2500000; // Default or from API
     updatedData[5] = {
       ...updatedData[5],
       saEligibility: coverageApplied,
