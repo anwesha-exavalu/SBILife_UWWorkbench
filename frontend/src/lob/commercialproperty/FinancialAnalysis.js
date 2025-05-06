@@ -22,7 +22,7 @@ const FinancialAnalysis = () => {
     annualIncome: "770,000",
     customerID: "20967",
     panNumber: "XXXXXXXXXX", // Added PAN number for matching
-    companyName: "Quality House" // Added company name for matching
+    companyName: "ABC SUPPORT SERVICES INDIA PRIVATE LIMITED" // Added company name for matching
   };
 
   const [selectedDocType, setSelectedDocType] = useState(null);
@@ -42,8 +42,8 @@ const FinancialAnalysis = () => {
   const form16ItrColumns = [
     { title: '', dataIndex: 'description', key: 'description' },
     { title: 'FY19-20', dataIndex: 'fy1920', key: 'fy1920' },
-    { title: 'FY21-22', dataIndex: 'fy2122', key: 'fy2122' },
-    { title: 'FY22-23', dataIndex: 'fy2223', key: 'fy2223' },
+    { title: 'FY20-21', dataIndex: 'fy2122', key: 'fy2122' },
+    { title: 'FY21-22', dataIndex: 'fy2223', key: 'fy2223' },
     { title: '3 Years Average', dataIndex: 'average', key: 'average' },
     { title: 'SAMF', dataIndex: 'samf', key: 'samf' },
     { title: 'SA Eligibility', dataIndex: 'saEligibility', key: 'saEligibility' },
@@ -362,9 +362,9 @@ const updateTableWithApiData = (apiResponse) => {
     
     // For this example, let's assume we have some previous data for other fiscal years
     // In a real application, you would maintain this state or get it from another API
-    if (fy1920 === 0) fy1920 = 720000; // Example value if not provided
-    if (fy2122 === 0) fy2122 = 735000; // Example value if not provided
-    if (fy2223 === 0) fy2223 = 756000; // Example value if not provided
+    if (fy1920 === 0) fy1920 = 123000; // Example value if not provided
+    if (fy2122 === 0) fy2122 = 187000; // Example value if not provided
+    if (fy2223 === 0) fy2223 = 256000; // Example value if not provided
     
     // Calculate 3-year average
     const average = Math.round((fy1920 + fy2122 + fy2223) / 3);
@@ -485,7 +485,7 @@ const updateTableWithApiData = (apiResponse) => {
 
     const avgMonthly = (jan + feb + mar) / 3;
     console.log("avg",avgMonthly)
-    const annual = Math.round(avgMonthly);
+    const annual = Math.round(avgMonthly * 12);
     
     // Calculate SA Eligibility
     const saEligibility = typeof samf === 'number' ? Math.round(annual * samf) : 0;
